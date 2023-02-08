@@ -1,17 +1,11 @@
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useFirestore, useCollection, useDocument } from 'vuefire';
 import { collection, query, where, getDocs, doc } from 'firebase/firestore';
-import { RouterView, RouterLink, useRoute } from 'vue-router';
-import { adminRef } from '../firebase'
+import { adminRef } from '../firebase';
 let username = ref();
 let password = ref();
 export default defineComponent({
-    setup() {
-        const route = useRoute()
-        const usernames = computed(() => route.params.usernames)
-        return { usernames }
-    },
     data() {
         return {
             show: "password",
@@ -20,7 +14,7 @@ export default defineComponent({
         }
     },
     props: {
-
+        username: String
     },
     methods: {
         showPassword() {
@@ -30,7 +24,10 @@ export default defineComponent({
             let q = query(adminRef, where("username", "==", `${this.username}`), where("password", "==", `${this.password}`));
             const queryAdmin = await getDocs(q);
             if (queryAdmin.size != 0) {
-                this.$router.push({ name: "panel", params: { usernames: this.username } })
+                localStorage.setItem("token", this.username);
+                this.$router.push({ name: "panel" });
+                this.$store.commit('isLogin');
+                console.log(this.$store.state.isLogged);
             } else {
                 alert("Wrong username & password");
             }

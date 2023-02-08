@@ -17,3 +17,11 @@ const db = getFirestore(firebaseApp)
 
 // here we can export reusable database references
 export const adminRef = collection(db, 'admin-games')
+
+// Fortune wheel firestore
+export const prizeRef = collection(db, 'luckyspin')
+export const kuponRef = collection(db, 'kupon')
+export const winnerRef = collection(db, 'prizespinwheel')
+
+// pinball firestore
+export const leaderboardRef = collection(db, 'pinball-leaderboard')

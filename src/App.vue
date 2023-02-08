@@ -4,7 +4,7 @@ import AdminLogin from './components/AdminLogin.vue';
 import { RouterView, RouterLink } from 'vue-router';
 import { defineComponent } from 'vue';
 export default defineComponent({
-  
+
 })
 
 </script>
