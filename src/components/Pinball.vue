@@ -27,15 +27,6 @@ export default defineComponent({
 
             return rupiah.split('', rupiah.length - 1).reverse().join('');
         }
-    },
-    beforeCreate() {
-        if (this.$store.state.isLogged) {
-            this.$router.push({ name: "login" });
-        }
-        else {
-            // this.username = localStorage.getItem("token");
-            console.log(localStorage.getItem("token"));
-        }
     }
 })
 </script>

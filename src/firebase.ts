@@ -13,7 +13,7 @@ export const firebaseApp = initializeApp({
 })
 
 // used for the firestore refs
-const db = getFirestore(firebaseApp)
+export const db = getFirestore(firebaseApp)
 
 // here we can export reusable database references
 export const adminRef = collection(db, 'admin-games')

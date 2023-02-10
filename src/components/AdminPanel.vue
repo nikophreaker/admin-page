@@ -32,7 +32,7 @@ export default defineComponent({
         }
     },
     beforeCreate() {
-        if (this.$store.state.isLogged) {
+        if (!this.$store.state.isLogged) {
             this.$router.push({ name: "login" });
         }
         else {
@@ -47,7 +47,7 @@ export default defineComponent({
 <template>
     <aside class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
         aria-label="Sidebar">
-        <div class="w-60 h-full shadow-md bg-white px-1 absolute">
+        <div class="min-w-full h-full shadow-md bg-white px-1 absolute">
             <div class="pt-4 pb-2 px-6">
                 <a href="#!">
                     <div class="flex items-center">
@@ -94,7 +94,7 @@ export default defineComponent({
             </ul>
         </div>
     </aside>
-    <div class="relative flex flex-col h-screen w-screen -top-12 -left-28">
+    <div class="relative flex flex-col h-screen w-screen">
         <div :class="{ 'hidden': openNav !== 1, 'block': openNav === 1 }">
             <FortuneWheel />
         </div>
