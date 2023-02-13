@@ -1,5 +1,4 @@
 <script lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
 import AdminLogin from './components/AdminLogin.vue';
 import { RouterView, RouterLink } from 'vue-router';
 import { defineComponent } from 'vue';
