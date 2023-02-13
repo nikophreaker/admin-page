@@ -12,7 +12,13 @@ export default defineComponent({
             status: true,
             openAdd: false,
             openUpdate: false,
+            isOpen: false,
         };
+    },
+    computed: {
+        isModalVisible() {
+            return this.isOpen;
+        }
     },
     methods: {
         onClickAdd() {
@@ -62,14 +68,53 @@ export default defineComponent({
             });
             this.openUpdate = !this.openUpdate;
         },
-        onDelete(prize: DocumentData) {
-            deleteDoc(doc(db, "kupon", `${prize.id}`));
+        onDelete() {
+            deleteDoc(doc(db, "kupon", `${this.id}`));
+            this.isOpen = !this.isOpen;
+        },
+        onToggle(id: string) {
+            this.isOpen = !this.isOpen;
+            if (this.isOpen) {
+                this.id = id
+            }
         }
     }
 })
 </script>
 
 <template>
+    <transition name="fade">
+        <div v-if="isModalVisible">
+            <div @click="onToggle(`0`)" class="absolute bg-black opacity-70 inset-0 z-0"></div>
+            <div class="w-full max-w-lg p-3 relative mx-auto my-auto rounded-xl shadow-lg bg-white">
+                <div>
+                    <div class="text-center p-3 flex-auto justify-center leading-6">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="w-16 h-16 flex items-center text-purple-500 mx-auto" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <h2 class="text-2xl font-bold py-4">Are you sure?</h2>
+                        <p class="text-md text-gray-500 px-8">
+                            Do you really want to delete?
+                        </p>
+                    </div>
+                    <div class="p-3 mt-2 text-center space-x-4 md:block">
+                        <button @click="onDelete()"
+                            class="mb-2 md:mb-0 text-white bg-red-600 hover:bg-red-800 text-sm px-5 py-2 tracking-wider border rounded-md">
+                            Delete
+                        </button>
+                        <button @click="onToggle(`0`)"
+                            class="mb-2 md:mb-0 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-white text-sm px-5 py-2 tracking-wider border rounded-md">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </transition>
     <div class="flex flex-col">
         <div :class="{ 'overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8': true, 'hidden': openUpdate }">
             <div class="mb-4">
@@ -126,7 +171,7 @@ export default defineComponent({
                                 </a>
                             </td>
                             <td class="text-sm font-medium leading-5 whitespace-no-wrap border-b border-gray-200 ">
-                                <a href="#" @click="onDelete(kupon)"><svg xmlns="http://www.w3.org/2000/svg"
+                                <a href="#" @click="onToggle(kupon.id)"><svg xmlns="http://www.w3.org/2000/svg"
                                         class="w-6 h-6 text-red-600 hover:text-red-800" fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
