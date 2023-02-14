@@ -27,6 +27,8 @@ export default defineComponent({
             this.isOpen = !this.isOpen;
             if (this.isOpen) {
                 this.winnerId = winner
+            } else {
+                this.winnerId = 0
             }
         }
     }

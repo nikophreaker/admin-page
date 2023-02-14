@@ -118,6 +118,8 @@ export default defineComponent({
             this.isOpen = !this.isOpen;
             if (this.isOpen) {
                 this.id = id
+            } else {
+                this.id = ""
             }
         }
     }
