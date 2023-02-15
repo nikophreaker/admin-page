@@ -2,11 +2,11 @@
 import { DocumentData, where, query, doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { defineProps, defineComponent, ref } from 'vue';
 import { useFirestore, useCollection, useDocument } from 'vuefire';
-import { db, prizeRef, kuponRef, winnerRef } from '../../firebase';
+import { db, kuponRef2 } from '../../firebase';
 export default defineComponent({
     data() {
         return {
-            kuponList: useCollection(kuponRef),
+            kuponList: useCollection(kuponRef2),
             id: "",
             kode: "",
             status: true,
@@ -39,14 +39,15 @@ export default defineComponent({
             }
         },
         onAdd(kupon: DocumentData) {
-            let id = kupon.id ? parseInt(kupon.id) + 1 : 1;
+            console.log(kupon);
+            let id = kupon != undefined ? parseInt(kupon.id) + 1 : 1;
             let data = {
                 id: id,
                 kode: this.kode.toUpperCase(),
                 active: this.status,
             }
             if (this.kode != "" && this.status != null) {
-                setDoc(doc(db, "kupon", `${id}`), data).then(() => {
+                setDoc(doc(db, "kupon-pinball", `${id}`), data).then(() => {
                     this.id = ""
                     this.kode = ""
                     this.status = true
@@ -61,7 +62,7 @@ export default defineComponent({
                 kode: this.kode.toUpperCase(),
                 active: this.status,
             }
-            updateDoc(doc(db, "kupon", `${this.id}`), data).then(() => {
+            updateDoc(doc(db, "kupon-pinball", `${this.id}`), data).then(() => {
                 this.id = ""
                 this.kode = ""
                 this.status = true
@@ -69,7 +70,7 @@ export default defineComponent({
             this.openUpdate = !this.openUpdate;
         },
         onDelete() {
-            deleteDoc(doc(db, "kupon", `${this.id}`));
+            deleteDoc(doc(db, "kupon-pinball", `${this.id}`));
             this.isOpen = !this.isOpen;
         },
         onToggle(id: string) {
