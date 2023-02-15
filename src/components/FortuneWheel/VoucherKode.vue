@@ -39,7 +39,7 @@ export default defineComponent({
             }
         },
         onAdd(kupon: DocumentData) {
-            let id = kupon.id ? parseInt(kupon.id) + 1 : 1;
+            let id = kupon != undefined ? parseInt(kupon.id) + 1 : 1;
             let data = {
                 id: id,
                 kode: this.kode.toUpperCase(),

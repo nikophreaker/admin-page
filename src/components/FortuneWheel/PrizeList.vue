@@ -63,7 +63,7 @@ export default defineComponent({
             uploadString(storageRef, this.imgResult, 'data_url').then((snapshot) => {
                 getDownloadURL(snapshot.ref).then((downloadURL) => {
                     this.url = downloadURL
-                    let id = prize.id ? parseInt(prize.id) + 1 : 0;
+                    let id = prize != undefined ? parseInt(prize.id) + 1 : 0;
                     let data = {
                         id: id,
                         icon: this.url,
