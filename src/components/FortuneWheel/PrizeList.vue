@@ -1,6 +1,4 @@
 <script lang="ts">
-
-
 import { DocumentData, where, query, doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { getStorage, ref as refs, getDownloadURL, uploadString } from 'firebase/storage'
 import { url } from 'inspector';
@@ -20,6 +18,7 @@ export default defineComponent({
             openAdd: false,
             openUpdate: false,
             isOpen: false,
+            searchTxt: "",
         };
     },
     computed: {
@@ -70,8 +69,8 @@ export default defineComponent({
                         id: id,
                         icon: this.url,
                         percentage: `${this.percentage}`,
-                        sliceText: this.prize,
-                        text: this.prize,
+                        sliceText: this.prize.toUpperCase(),
+                        text: this.prize.toUpperCase(),
                         startColor: this.color.replace("#", "0x"),
                         endColor: this.color.replace("#", "0x"),
                         type: "prize",
@@ -96,8 +95,8 @@ export default defineComponent({
                 id: parseInt(this.id),
                 icon: this.url,
                 percentage: `${this.percentage}`,
-                sliceText: this.prize,
-                text: this.prize,
+                sliceText: this.prize.toUpperCase(),
+                text: this.prize.toUpperCase(),
                 startColor: this.color.replace("#", "0x"),
                 endColor: this.color.replace("#", "0x"),
                 type: "prize",
@@ -169,6 +168,7 @@ export default defineComponent({
                 </div>
             </div>
             <div class="inline-block min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg">
+                <input type="text" class="mb-4 min-w-full bg-white text-black" placeholder="Search here..." v-model="searchTxt">
                 <table class="min-w-full">
                     <thead>
                         <tr>
@@ -180,7 +180,7 @@ export default defineComponent({
                                 Icon</th>
                             <th
                                 class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                Score</th>
+                                Prize</th>
                             <th
                                 class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                                 Percentage</th>
@@ -190,7 +190,7 @@ export default defineComponent({
                         </tr>
                     </thead>
                     <tbody class="bg-white">
-                        <tr v-for="prize in prizeList.sort((a, b) => a.id - b.id)" :ref_key="prize.id">
+                        <tr v-for="prize in prizeList.sort((a, b) => a.id - b.id).filter((a) => a.text.includes(searchTxt.toUpperCase()))" :ref_key="prize.id">
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="flex items-center text-gray-900">
                                     {{ prize.id }}

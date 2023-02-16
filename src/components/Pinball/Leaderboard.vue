@@ -1,6 +1,4 @@
 <script lang="ts">
-
-
 import { DocumentData, where, query, doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { defineProps, defineComponent, ref } from 'vue';
 import { useFirestore, useCollection, useDocument } from 'vuefire';
@@ -12,6 +10,7 @@ export default defineComponent({
             leaderboardList: useCollection(leaderboardRef),
             id: "",
             isOpen: false,
+            searchTxt: ""
         };
     },
     props: {
@@ -92,6 +91,7 @@ export default defineComponent({
     </transition>
     <div class="overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div class="inline-block min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg">
+            <input type="text" class="mb-4 min-w-full bg-white text-black" placeholder="Search here..." v-model="searchTxt">
             <table class="min-w-full">
                 <thead>
                     <tr>
@@ -115,7 +115,7 @@ export default defineComponent({
                     </tr>
                 </thead>
                 <tbody class="bg-white">
-                    <tr v-for="leaderboard in leaderboards" :ref_key="leaderboard.id">
+                    <tr v-for="leaderboard in leaderboards.filter((a) => a.name.includes(searchTxt.toUpperCase()) || a.date.includes(searchTxt.toUpperCase()) || a.id.includes(searchTxt.toUpperCase()))" :ref_key="leaderboard.id">
                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                             <div class="flex items-center text-gray-900">
                                 {{ leaderboards.indexOf(leaderboard) + 1 }}
