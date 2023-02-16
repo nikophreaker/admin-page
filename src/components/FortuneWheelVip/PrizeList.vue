@@ -1,15 +1,20 @@
 <script lang="ts">
-import { DocumentData, where, query, doc, getDocs, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { defineProps, defineComponent, ref } from 'vue';
+import { DocumentData, where, query, doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { getStorage, ref as refs, getDownloadURL, uploadString } from 'firebase/storage'
+import { url } from 'inspector';
+import { defineProps, defineComponent, ref } from 'vue'
 import { useFirestore, useCollection, useDocument } from 'vuefire';
-import { db, col, col2, col3, prizeRef, kuponRef, winnerRef } from '../../firebase';
+import { db, colVip, colVip2, colVip3, prizeVipRef, kuponVipRef, winnerVipRef } from '../../firebase';
 export default defineComponent({
     data() {
         return {
-            kuponList: useCollection(kuponRef),
+            prizeList: useCollection(prizeVipRef),
             id: "",
-            kode: "",
-            status: true,
+            url: "",
+            imgResult: "",
+            percentage: 0,
+            prize: "",
+            color: "#000000",
             openAdd: false,
             openUpdate: false,
             isOpen: false,
@@ -21,80 +26,92 @@ export default defineComponent({
         }
     },
     methods: {
-        async makeCode(length: number) {
-            let result = '';
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            const charactersLength = characters.length;
-            let counter = 0;
-            while (counter < length) {
-                result += characters.charAt(Math.floor(Math.random() * charactersLength));
-                counter += 1;
-            }
-            const q = query(kuponRef, where("kode", "==", result));
-            const querySnapshot = await getDocs(q);
-            if (querySnapshot.size == 0) {
-                let last = this.kuponList.sort((a, b) => a.id - b.id)[this.kuponList.length - 1]
-                let id = last != undefined ? parseInt(last.id) + 1 : 1;
-                let data = {
-                    id: id,
-                    kode: result.toUpperCase(),
-                    active: true,
-                }
-                setDoc(doc(db, col2, `${id}`), data);
-                return result
-            } else {
-                return;
-            }
+        onFileChange(e: any) {
+            const image = e.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = e => {
+                this.imgResult = `${reader.result}`;
+                this.url = URL.createObjectURL(image);
+            };
         },
         onClickAdd() {
             this.openAdd = true;
             this.openUpdate = !this.openUpdate;
         },
-        onClickUpdate(kupon: DocumentData) {
+        onClickUpdate(prize: DocumentData) {
             this.openAdd = false;
             this.openUpdate = !this.openUpdate;
             if (this.openUpdate === true) {
-                this.id = kupon.id
-                this.kode = kupon.kode
-                this.status = kupon.active
+                this.id = prize.id
+                this.url = prize.icon
+                this.percentage = prize.percentage
+                this.color = prize.startColor.replace("0x", "#")
+                this.prize = prize.text
             } else {
                 this.id = ""
-                this.kode = ""
-                this.status = true
+                this.url = ""
+                this.percentage = 0
+                this.color = ""
+                this.prize = ""
             }
         },
-        onAdd(kupon: DocumentData) {
-            let id = kupon != undefined ? parseInt(kupon.id) + 1 : 1;
-            let data = {
-                id: id,
-                kode: this.kode.toUpperCase(),
-                active: this.status,
-            }
-            if (this.kode != "" && this.status != null) {
-                setDoc(doc(db, col2, `${id}`), data).then(() => {
-                    this.id = ""
-                    this.kode = ""
-                    this.status = true
-                    this.openUpdate = !this.openUpdate;
-                    this.openAdd = false;
+        onAdd(prize: DocumentData) {
+            var time = Date.now().toString();
+            const storage = getStorage();
+            const storageRef = refs(storage, `slice/${time}.png`);
+            uploadString(storageRef, this.imgResult, 'data_url').then((snapshot) => {
+                getDownloadURL(snapshot.ref).then((downloadURL) => {
+                    this.url = downloadURL
+                    let id = prize != undefined ? parseInt(prize.id) + 1 : 0;
+                    let data = {
+                        id: id,
+                        icon: this.url,
+                        percentage: `${this.percentage}`,
+                        sliceText: this.prize,
+                        text: this.prize,
+                        startColor: this.color.replace("#", "0x"),
+                        endColor: this.color.replace("#", "0x"),
+                        type: "prize",
+                        rings: 1
+                    }
+                    if (this.url != "" && this.percentage != null && this.prize != "" && this.color != null) {
+                        setDoc(doc(db, colVip, `${id}`), data).then(() => {
+                            this.id = ""
+                            this.url = ""
+                            this.percentage = 0
+                            this.color = ""
+                            this.prize = ""
+                            this.openUpdate = !this.openUpdate;
+                            this.openAdd = false;
+                        });
+                    }
                 });
-            }
+            });
         },
         onUpdate() {
             let data = {
                 id: parseInt(this.id),
-                kode: this.kode.toUpperCase(),
-                active: this.status,
+                icon: this.url,
+                percentage: `${this.percentage}`,
+                sliceText: this.prize,
+                text: this.prize,
+                startColor: this.color.replace("#", "0x"),
+                endColor: this.color.replace("#", "0x"),
+                type: "prize",
+                rings: 1
             }
-            updateDoc(doc(db, col2, `${this.id}`), data).then(() => {
+            updateDoc(doc(db, colVip, `${this.id}`), data).then(() => {
                 this.id = ""
-                this.kode = ""
-                this.status = true
+                this.url = ""
+                this.percentage = 0
+                this.color = ""
+                this.prize = ""
             });
             this.openUpdate = !this.openUpdate;
         },
         onDelete() {
-            deleteDoc(doc(db, col2, `${this.id}`));
+            deleteDoc(doc(db, colVip, `${this.id}`));
             this.isOpen = !this.isOpen;
         },
         onToggle(id: string) {
@@ -146,11 +163,7 @@ export default defineComponent({
             <div class="mb-4">
                 <div class="flex justify-start">
                     <button class="px-4 py-2 rounded-md bg-sky-500 text-sky-100 hover:bg-sky-600" @click="onClickAdd">Create
-                        Voucher</button>
-                </div>
-                <div class="flex justify-end">
-                    <button class="px-4 py-2 rounded-md bg-sky-500 text-sky-100 hover:bg-sky-600" @click="makeCode(5)">Add
-                        Random Code</button>
+                        Prize</button>
                 </div>
             </div>
             <div class="inline-block min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg">
@@ -162,34 +175,41 @@ export default defineComponent({
                                 No</th>
                             <th
                                 class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                Kode</th>
+                                Icon</th>
                             <th
                                 class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                Status</th>
+                                Score</th>
+                            <th
+                                class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                                Percentage</th>
                             <th class="py-3 text-sm text-left text-gray-500 border-b border-gray-200 bg-gray-50"
                                 colspan="4">
                                 Action</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white">
-                        <tr v-for="kupon in kuponList.sort((a, b) => a.id - b.id)" :ref_key="kupon.id">
+                        <tr v-for="prize in prizeList.sort((a, b) => a.id - b.id)" :ref_key="prize.id">
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="flex items-center text-gray-900">
-                                    {{ kupon.id }}
+                                    {{ prize.id }}
                                 </div>
                             </td>
 
+                            <td class="py-4 whitespace-no-wrap border-b border-gray-200">
+                                <img class="w-16" :src="prize.icon" />
+                            </td>
+
                             <td class="py-4 whitespace-no-wrap border-b border-gray-200 text-gray-900">
-                                <p class="flex">{{ kupon.kode }}</p>
+                                <p class="flex">{{ prize.text }}</p>
                             </td>
 
                             <td class="py-4 text-sm leading-5 whitespace-no-wrap border-b border-gray-200 text-gray-900">
-                                <p class="flex">{{ kupon.active ? "Aktif" : "Tidak Aktif" }}</p>
+                                <p class="flex">{{ prize.percentage }}%</p>
                             </td>
 
                             <td
                                 class="text-sm font-medium leading-5 text-center whitespace-no-wrap border-b border-gray-200 text-gray-900">
-                                <a href="#" class="text-indigo-600 hover:text-indigo-900" @click="onClickUpdate(kupon)">
+                                <a href="#" class="text-indigo-600 hover:text-indigo-900" @click="onClickUpdate(prize)">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -198,7 +218,7 @@ export default defineComponent({
                                 </a>
                             </td>
                             <td class="text-sm font-medium leading-5 whitespace-no-wrap border-b border-gray-200 ">
-                                <a href="#" @click="onToggle(kupon.id)"><svg xmlns="http://www.w3.org/2000/svg"
+                                <a href="#" @click="onToggle(prize.id)"><svg xmlns="http://www.w3.org/2000/svg"
                                         class="w-6 h-6 text-red-600 hover:text-red-800" fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -215,28 +235,45 @@ export default defineComponent({
             <form method="POST" action="" @submit.prevent="false">
 
                 <div>
-                    <label class="flex text-sm font-bold text-gray-700">
-                        Kode
+                    <label class="flex text-sm font-bold text-gray-700" for="icon">
+                        Icon
                     </label>
                     <div>
-                        <input
-                            class="block mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                            type="text" maxlength="5" v-model="kode" style="text-transform:uppercase" required />
+                        <input class="block text-black" type="file" @change="onFileChange" accept=".jpg, .jpeg, .png"
+                            required />
+                        <img v-if="url" :src="url" class="w-32" />
                     </div>
                 </div>
 
                 <div class="mt-4">
-                    <label class="flex text-sm font-bold text-gray-700">
-                        Status
+                    <label class="flex text-sm font-bold text-gray-700" for="password">
+                        Prize
                     </label>
-                    <select class="flex text-sm" v-model="status">
-                        <option :value="true">Aktif</option>
-                        <option :value="false">Tidak Aktif</option>
-                    </select>
+                    <textarea name="description" required
+                        class="block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        rows="4" placeholder="400" v-model="prize"></textarea>
+                </div>
+
+                <div class="mt-4">
+                    <label class="flex text-sm font-bold text-gray-700" for="password">
+                        Percentage
+                    </label>
+                    <input type="range" min="0" max="100" v-model="percentage"
+                        class="slider block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                    <h1 class="text-black">{{ percentage }}%</h1>
+                </div>
+
+                <div class="mt-4">
+                    <label class="flex text-sm font-bold text-gray-700" for="password">
+                        Color
+                    </label>
+                    <input type="color" v-model="color" required
+                        class="slider block w-full mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
+                    <h1 class="text-black">{{ color }}</h1>
                 </div>
 
                 <div class="flex items-center justify-start mt-4 gap-x-2">
-                    <button type="submit" @click="onAdd(kuponList.sort((a, b) => a.id - b.id)[kuponList.length - 1])"
+                    <button type="submit" @click="onAdd(prizeList.sort((a, b) => a.id - b.id)[prizeList.length - 1])"
                         :class="{ 'px-6 py-2 text-sm font-semibold rounded-md shadow-md text-sky-100 bg-sky-500 hover:bg-sky-700 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300': true, 'hidden': !openAdd }">
                         Add
                     </button>

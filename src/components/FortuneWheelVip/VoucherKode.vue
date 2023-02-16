@@ -1,12 +1,12 @@
 <script lang="ts">
-import { DocumentData, where, query, doc, getDocs, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { DocumentData, where, query, getDocs, doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { defineProps, defineComponent, ref } from 'vue';
 import { useFirestore, useCollection, useDocument } from 'vuefire';
-import { db, col, col2, col3, prizeRef, kuponRef, winnerRef } from '../../firebase';
+import { db, colVip, colVip2, colVip3, prizeVipRef, kuponVipRef, winnerVipRef } from '../../firebase';
 export default defineComponent({
     data() {
         return {
-            kuponList: useCollection(kuponRef),
+            kuponList: useCollection(kuponVipRef),
             id: "",
             kode: "",
             status: true,
@@ -30,7 +30,7 @@ export default defineComponent({
                 result += characters.charAt(Math.floor(Math.random() * charactersLength));
                 counter += 1;
             }
-            const q = query(kuponRef, where("kode", "==", result));
+            const q = query(kuponVipRef, where("kode", "==", result));
             const querySnapshot = await getDocs(q);
             if (querySnapshot.size == 0) {
                 let last = this.kuponList.sort((a, b) => a.id - b.id)[this.kuponList.length - 1]
@@ -40,7 +40,7 @@ export default defineComponent({
                     kode: result.toUpperCase(),
                     active: true,
                 }
-                setDoc(doc(db, col2, `${id}`), data);
+                setDoc(doc(db, colVip2, `${id}`), data);
                 return result
             } else {
                 return;
@@ -71,7 +71,7 @@ export default defineComponent({
                 active: this.status,
             }
             if (this.kode != "" && this.status != null) {
-                setDoc(doc(db, col2, `${id}`), data).then(() => {
+                setDoc(doc(db, colVip2, `${id}`), data).then(() => {
                     this.id = ""
                     this.kode = ""
                     this.status = true
@@ -86,7 +86,7 @@ export default defineComponent({
                 kode: this.kode.toUpperCase(),
                 active: this.status,
             }
-            updateDoc(doc(db, col2, `${this.id}`), data).then(() => {
+            updateDoc(doc(db, colVip2, `${this.id}`), data).then(() => {
                 this.id = ""
                 this.kode = ""
                 this.status = true
@@ -94,7 +94,7 @@ export default defineComponent({
             this.openUpdate = !this.openUpdate;
         },
         onDelete() {
-            deleteDoc(doc(db, col2, `${this.id}`));
+            deleteDoc(doc(db, colVip2, `${this.id}`));
             this.isOpen = !this.isOpen;
         },
         onToggle(id: string) {

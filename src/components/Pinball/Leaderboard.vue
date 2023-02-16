@@ -1,16 +1,29 @@
 <script lang="ts">
+
+
+import { DocumentData, where, query, doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { defineProps, defineComponent, ref } from 'vue';
 import { useFirestore, useCollection, useDocument } from 'vuefire';
-import { leaderboardRef } from '../../firebase';
+import { db, colPinball, leaderboardRef } from '../../firebase';
 export default defineComponent({
     data() {
         return {
             username: ref(),
-            leaderboardList: useCollection(leaderboardRef)
+            leaderboardList: useCollection(leaderboardRef),
+            id: "",
+            isOpen: false,
         };
     },
     props: {
         username: String
+    },
+    computed: {
+        leaderboards: function () {
+            return this.leaderboardList.sort((a, b) => b.score - a.score)
+        },
+        isModalVisible() {
+            return this.isOpen;
+        }
     },
     methods: {
         convertToRupiah(angka: number) {
@@ -21,12 +34,62 @@ export default defineComponent({
                 if (i % 3 == 0) rupiah += angkarev.substr(i, 3) + '.';
 
             return rupiah.split('', rupiah.length - 1).reverse().join('');
+        },
+        onDelete() {
+            deleteDoc(doc(db, colPinball, `${this.id}`));
+            this.isOpen = !this.isOpen;
+        },
+        onDeleteId(id: string) {
+            if (confirm(`Yakin untuk menghapus ${id} ?`)) {
+                deleteDoc(doc(db, colPinball, `${id}`));
+            } else {
+
+            }
+        },
+        onToggle(id: string) {
+            this.isOpen = !this.isOpen;
+            if (this.isOpen) {
+                this.id = id
+            } else {
+                this.id = ""
+            }
         }
     }
 })
 </script>
 
 <template>
+    <transition name="fade">
+        <div v-if="isModalVisible">
+            <div @click="onToggle(`0`)" class="absolute bg-black opacity-70 inset-0 z-0"></div>
+            <div class="w-full max-w-lg p-3 relative mx-auto my-auto rounded-xl shadow-lg bg-white">
+                <div>
+                    <div class="text-center p-3 flex-auto justify-center leading-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 flex items-center text-purple-500 mx-auto"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <h2 class="text-2xl font-bold py-4">Are you sure?</h2>
+                        <p class="text-md text-gray-500 px-8">
+                            Do you really want to delete?
+                        </p>
+                    </div>
+                    <div class="p-3 mt-2 text-center space-x-4 md:block">
+                        <button @click="onDelete()"
+                            class="mb-2 md:mb-0 text-white bg-red-600 hover:bg-red-800 text-sm px-5 py-2 tracking-wider border rounded-md">
+                            Delete
+                        </button>
+                        <button @click="onToggle(`0`)"
+                            class="mb-2 md:mb-0 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-white text-sm px-5 py-2 tracking-wider border rounded-md">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </transition>
     <div class="overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div class="inline-block min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg">
             <table class="min-w-full">
@@ -40,20 +103,22 @@ export default defineComponent({
                             Username</th>
                         <th
                             class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                            Email</th>
+                        <th
+                            class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                             Score</th>
                         <th
                             class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                             Date</th>
-                        <th class="py-3 text-sm text-left text-gray-500 border-b border-gray-200 bg-gray-50"
-                            colspan="4">
+                        <th class="py-3 text-sm text-left text-gray-500 border-b border-gray-200 bg-gray-50" colspan="4">
                             Action</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white">
-                    <tr v-for="leaderboard in leaderboardList.sort((a, b) => b.score - a.score)" :key="leaderboard.id">
+                    <tr v-for="leaderboard in leaderboards" :ref_key="leaderboard.id">
                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                             <div class="flex items-center text-gray-900">
-                                {{ leaderboardList.indexOf(leaderboard) + 1 }}
+                                {{ leaderboards.indexOf(leaderboard) + 1 }}
                             </div>
                         </td>
 
@@ -62,12 +127,16 @@ export default defineComponent({
                             </div>
                         </td>
 
+                        <td class="py-4 whitespace-no-wrap border-b border-gray-200">
+                            <div class="flex text-sm leading-5 text-gray-900">{{ leaderboard.id }}
+                            </div>
+                        </td>
+
                         <td class="py-4 whitespace-no-wrap border-b border-gray-200 text-gray-900">
                             <p class="flex">{{ convertToRupiah(leaderboard.score) }}</p>
                         </td>
 
-                        <td
-                            class="flex py-4 text-sm leading-5 whitespace-no-wrap border-b border-gray-200 text-gray-900">
+                        <td class="flex py-4 text-sm leading-5 whitespace-no-wrap border-b border-gray-200 text-gray-900">
                             <span>{{ leaderboard.date }}</span>
                         </td>
 
@@ -82,7 +151,7 @@ export default defineComponent({
                             </a>
                         </td>
                         <td class="text-sm font-medium leading-5 whitespace-no-wrap border-b border-gray-200 ">
-                            <a href="#"><svg xmlns="http://www.w3.org/2000/svg"
+                            <a href="#" @click="onDeleteId(leaderboard.id)"><svg xmlns="http://www.w3.org/2000/svg"
                                     class="w-6 h-6 text-red-600 hover:text-red-800" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -93,5 +162,5 @@ export default defineComponent({
                 </tbody>
             </table>
         </div>
-    </div>
+</div>
 </template>

@@ -1,4 +1,5 @@
-<script lang="ts">
+<template></template>
+<!-- <script lang="ts">
 import { DocumentData, where, query, doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { defineProps, defineComponent, ref } from 'vue';
 import { useFirestore, useCollection, useDocument } from 'vuefire';
@@ -147,7 +148,7 @@ export default defineComponent({
                         </tr>
                     </thead>
                     <tbody class="bg-white">
-                        <tr v-for="kupon in kuponList.sort((a, b) => a.id - b.id)" :key="kupon.id">
+                        <tr v-for="kupon in kuponList.sort((a, b) => a.id - b.id)" :ref_key="kupon.id">
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="flex items-center text-gray-900">
                                     {{ kupon.id }}
@@ -228,4 +229,4 @@ export default defineComponent({
             </form>
         </div>
     </div>
-</template>
+</template> -->

@@ -4,11 +4,11 @@ import { getStorage, ref as refs, getDownloadURL, uploadString } from 'firebase/
 import { url } from 'inspector';
 import { defineProps, defineComponent, ref } from 'vue'
 import { useFirestore, useCollection, useDocument } from 'vuefire';
-import { db, col, col2, col3, prizeRef, kuponRef, winnerRef } from '../../firebase';
+import { db, colVip, colVip2, colVip3, prizeVipRef, kuponVipRef, winnerVipRef } from '../../firebase';
 export default defineComponent({
     data() {
         return {
-            winnerList: useCollection(winnerRef),
+            winnerList: useCollection(winnerVipRef),
             isOpen: false,
             winnerId: 0
         };
@@ -20,7 +20,7 @@ export default defineComponent({
     },
     methods: {
         onDelete() {
-            deleteDoc(doc(db, col3, `${this.winnerId}`));
+            deleteDoc(doc(db, colVip3, `${this.winnerId}`));
             this.isOpen = !this.isOpen;
         },
         onToggle(winner: number) {

@@ -3,6 +3,7 @@ import { defineProps, defineComponent, ref } from 'vue'
 import { RouterView, RouterLink } from 'vue-router';
 import FortuneWheel from './FortuneWheel.vue';
 import Pinball from './Pinball.vue';
+import FortuneWheelVip from './FortuneWheelVip.vue';
 export default defineComponent({
     data() {
         return {
@@ -40,7 +41,7 @@ export default defineComponent({
             console.log(localStorage.getItem("token"));
         }
     },
-    components: { FortuneWheel, Pinball }
+    components: { FortuneWheel, FortuneWheelVip, Pinball }
 })
 </script>
 
@@ -83,12 +84,18 @@ export default defineComponent({
                 <li class="relative">
                     <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
                         href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(2)"
-                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 2, 'text-white bg-pink-600': openNav === 2 }">Pinball</a>
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 2, 'text-white bg-pink-600 ': openNav === 2 }">Fortune
+                        Wheel Vip</a>
                 </li>
                 <li class="relative">
                     <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
                         href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(3)"
-                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 3, 'text-white bg-pink-600': openNav === 3 }">Coming
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 3, 'text-white bg-pink-600': openNav === 3 }">Pinball</a>
+                </li>
+                <li class="relative">
+                    <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
+                        href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(4)"
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 4, 'text-white bg-pink-600': openNav === 4 }">Coming
                         Soon</a>
                 </li>
             </ul>
@@ -99,10 +106,13 @@ export default defineComponent({
             <FortuneWheel />
         </div>
         <div :class="{ 'hidden': openNav !== 2, 'block': openNav === 2 }">
-            <Pinball />
+            <FortuneWheelVip />
         </div>
         <div :class="{ 'hidden': openNav !== 3, 'block': openNav === 3 }">
+            <Pinball />
+        </div>
+        <div :class="{ 'hidden': openNav !== 4, 'block': openNav === 4 }">
             <h1 class="text-center text-black relative py-96">COOMING SOON!</h1>
         </div>
-    </div>
+</div>
 </template>
