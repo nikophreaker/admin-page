@@ -91,25 +91,33 @@ export default defineComponent({
             });
         },
         onUpdate() {
-            let data = {
-                id: parseInt(this.id),
-                icon: this.url,
-                percentage: `${this.percentage}`,
-                sliceText: this.prize.toUpperCase(),
-                text: this.prize.toUpperCase(),
-                startColor: this.color.replace("#", "0x"),
-                endColor: this.color.replace("#", "0x"),
-                type: "prize",
-                rings: 1
-            }
-            updateDoc(doc(db, col, `${this.id}`), data).then(() => {
-                this.id = ""
-                this.url = ""
-                this.percentage = 0
-                this.color = ""
-                this.prize = ""
+            var time = Date.now().toString();
+            const storage = getStorage();
+            const storageRef = refs(storage, `slice/${time}.png`);
+            uploadString(storageRef, this.imgResult, 'data_url').then((snapshot) => {
+                getDownloadURL(snapshot.ref).then((downloadURL) => {
+                    this.url = downloadURL
+                    let data = {
+                        id: parseInt(this.id),
+                        icon: this.url,
+                        percentage: `${this.percentage}`,
+                        sliceText: this.prize.toUpperCase(),
+                        text: this.prize.toUpperCase(),
+                        startColor: this.color.replace("#", "0x"),
+                        endColor: this.color.replace("#", "0x"),
+                        type: "prize",
+                        rings: 1
+                    }
+                    updateDoc(doc(db, col, `${this.id}`), data).then(() => {
+                        this.id = ""
+                        this.url = ""
+                        this.percentage = 0
+                        this.color = ""
+                        this.prize = ""
+                    });
+                    this.openUpdate = !this.openUpdate;
+                });
             });
-            this.openUpdate = !this.openUpdate;
         },
         onDelete() {
             deleteDoc(doc(db, col, `${this.id}`));
@@ -168,7 +176,8 @@ export default defineComponent({
                 </div>
             </div>
             <div class="inline-block min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg">
-                <input type="text" class="mb-4 min-w-full bg-white text-black" placeholder="Search here..." v-model="searchTxt">
+                <input type="text" class="mb-4 min-w-full bg-white text-black" placeholder="Search here..."
+                    v-model="searchTxt">
                 <table class="min-w-full">
                     <thead>
                         <tr>
@@ -190,7 +199,8 @@ export default defineComponent({
                         </tr>
                     </thead>
                     <tbody class="bg-white">
-                        <tr v-for="prize in prizeList.sort((a, b) => a.id - b.id).filter((a) => a.text.includes(searchTxt.toUpperCase()))" :ref_key="prize.id">
+                        <tr v-for="prize in prizeList.sort((a, b) => a.id - b.id).filter((a) => a.text.includes(searchTxt.toUpperCase()))"
+                            :ref_key="prize.id">
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="flex items-center text-gray-900">
                                     {{ prize.id }}
@@ -290,5 +300,5 @@ export default defineComponent({
                 </div>
             </form>
         </div>
-</div>
+    </div>
 </template>
