@@ -94,30 +94,52 @@ export default defineComponent({
             var time = Date.now().toString();
             const storage = getStorage();
             const storageRef = refs(storage, `slice/${time}.png`);
-            uploadString(storageRef, this.imgResult, 'data_url').then((snapshot) => {
-                getDownloadURL(snapshot.ref).then((downloadURL) => {
-                    this.url = downloadURL
-                    let data = {
-                        id: parseInt(this.id),
-                        icon: this.url,
-                        percentage: `${this.percentage}`,
-                        sliceText: this.prize.toUpperCase(),
-                        text: this.prize.toUpperCase(),
-                        startColor: this.color.replace("#", "0x"),
-                        endColor: this.color.replace("#", "0x"),
-                        type: "prize",
-                        rings: 1
-                    }
-                    updateDoc(doc(db, colVip, `${this.id}`), data).then(() => {
-                        this.id = ""
-                        this.url = ""
-                        this.percentage = 0
-                        this.color = ""
-                        this.prize = ""
+            if (this.url == "" || null || undefined) {
+                uploadString(storageRef, this.imgResult, 'data_url').then((snapshot) => {
+                    getDownloadURL(snapshot.ref).then((downloadURL) => {
+                        this.url = downloadURL
+                        let data = {
+                            id: parseInt(this.id),
+                            icon: this.url,
+                            percentage: `${this.percentage}`,
+                            sliceText: this.prize.toUpperCase(),
+                            text: this.prize.toUpperCase(),
+                            startColor: this.color.replace("#", "0x"),
+                            endColor: this.color.replace("#", "0x"),
+                            type: "prize",
+                            rings: 1
+                        }
+                        updateDoc(doc(db, colVip, `${this.id}`), data).then(() => {
+                            this.id = ""
+                            this.url = ""
+                            this.percentage = 0
+                            this.color = ""
+                            this.prize = ""
+                        });
+                        this.openUpdate = !this.openUpdate;
                     });
-                    this.openUpdate = !this.openUpdate;
                 });
-            });
+            } else {
+                let data = {
+                    id: parseInt(this.id),
+                    icon: this.url,
+                    percentage: `${this.percentage}`,
+                    sliceText: this.prize.toUpperCase(),
+                    text: this.prize.toUpperCase(),
+                    startColor: this.color.replace("#", "0x"),
+                    endColor: this.color.replace("#", "0x"),
+                    type: "prize",
+                    rings: 1
+                }
+                updateDoc(doc(db, colVip, `${this.id}`), data).then(() => {
+                    this.id = ""
+                    this.url = ""
+                    this.percentage = 0
+                    this.color = ""
+                    this.prize = ""
+                });
+                this.openUpdate = !this.openUpdate;
+            }
         },
         onDelete() {
             deleteDoc(doc(db, colVip, `${this.id}`));
@@ -251,8 +273,7 @@ export default defineComponent({
                         Icon
                     </label>
                     <div>
-                        <input class="block text-black" type="file" @change="onFileChange" accept=".jpg, .jpeg, .png"
-                            required />
+                        <input class="block text-black" type="file" @change="onFileChange" accept=".jpg, .jpeg, .png"/>
                         <img v-if="url" :src="url" class="w-32" />
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { getFirestore, collection } from 'firebase/firestore'
+import { getFirestore, collection, query, limit } from 'firebase/firestore'
 
 export const firebaseApp = initializeApp({
     apiKey: "AIzaSyBdFMZoNwEWNqCOfUezoSB-TewpOBUfX98",
@@ -34,6 +34,18 @@ export const prizeVipRef = collection(db, colVip)
 export const kuponVipRef = collection(db, colVip2)
 export const winnerVipRef = collection(db, colVip3)
 
+// Scratch firestore
+export const colScratch = "scratch";
+export const colScratch2 = "kuponscratch";
+export const colScratch3 = "prizescratch";
+export const prizeScratchRef = collection(db, colScratch)
+export const kuponScratchRef = collection(db, colScratch2)
+export const winnerScratchRef = collection(db, colScratch3)
+
 // pinball firestore
 export const colPinball = "pinball-m88-leaderboard";
 export const leaderboardRef = collection(db, colPinball)
+
+// pinball firestore
+export const colFish = "fishshoot-m88-leaderboard";
+export const leaderboardFishRef = collection(db, colFish)

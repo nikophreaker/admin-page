@@ -4,11 +4,11 @@ import { getStorage, ref as refs, getDownloadURL, uploadString } from 'firebase/
 import { url } from 'inspector';
 import { defineProps, defineComponent, ref } from 'vue'
 import { useFirestore, useCollection, useDocument } from 'vuefire';
-import { db, col, col2, col3, prizeRef, kuponRef, winnerRef } from '../../firebase';
+import { db, colScratch, prizeScratchRef } from '../../firebase';
 export default defineComponent({
     data() {
         return {
-            prizeList: useCollection(prizeRef),
+            prizeList: useCollection(prizeScratchRef),
             id: "",
             url: "",
             imgResult: "",
@@ -77,7 +77,7 @@ export default defineComponent({
                         rings: 1
                     }
                     if (this.url != "" && this.percentage != null && this.prize != "" && this.color != null) {
-                        setDoc(doc(db, col, `${id}`), data).then(() => {
+                        setDoc(doc(db, colScratch, `${id}`), data).then(() => {
                             this.id = ""
                             this.url = ""
                             this.percentage = 0
@@ -109,7 +109,7 @@ export default defineComponent({
                             type: "prize",
                             rings: 1
                         }
-                        updateDoc(doc(db, col, `${this.id}`), data).then(() => {
+                        updateDoc(doc(db, colScratch, `${this.id}`), data).then(() => {
                             this.id = ""
                             this.url = ""
                             this.percentage = 0
@@ -131,7 +131,7 @@ export default defineComponent({
                     type: "prize",
                     rings: 1
                 }
-                updateDoc(doc(db, col, `${this.id}`), data).then(() => {
+                updateDoc(doc(db, colScratch, `${this.id}`), data).then(() => {
                     this.id = ""
                     this.url = ""
                     this.percentage = 0
@@ -142,7 +142,7 @@ export default defineComponent({
             }
         },
         onDelete() {
-            deleteDoc(doc(db, col, `${this.id}`));
+            deleteDoc(doc(db, colScratch, `${this.id}`));
             this.isOpen = !this.isOpen;
         },
         onToggle(id: string) {
