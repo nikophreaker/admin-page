@@ -3,16 +3,16 @@ import { DocumentData, where, query, doc, setDoc, updateDoc, deleteDoc, limit, o
 import { defineProps, defineComponent, ref } from 'vue';
 import { useFirestore, useCollection, useDocument } from 'vuefire';
 import { db, colPinball, leaderboardRef } from '../../firebase';
+var limits = 10;
 export default defineComponent({
     data() {
         return {
             username: ref(),
-            leaderboardList: useCollection(query((leaderboardRef), orderBy("score", "desc"))),
+            leaderboardList: useCollection(query((leaderboardRef), limit(limits), orderBy("score", "desc"))),
             id: "",
             isOpen: false,
             searchTxt: "",
-            firstData: Object(),
-            lastData: Object()
+            hasScrolledToBottom: false
         };
     },
     props: {
@@ -22,8 +22,23 @@ export default defineComponent({
         isModalVisible() {
             return this.isOpen;
         },
+        isScrolledBottom() {
+            return this.hasScrolledToBottom;
+        }
     },
     methods: {
+        loadMoreData() {
+            limits += 10;
+            const newList = useCollection(query((leaderboardRef), orderBy("score", "desc"), limit(limits)));
+            newList.promise.value.then((data) => {
+                console.log(this.leaderboardList.length+ "==" +newList.value.length);
+                if (this.leaderboardList.length != data.length) {
+                    this.leaderboardList = data;
+                } else {
+                    this.hasScrolledToBottom = !this.hasScrolledToBottom;
+                }
+            })
+        },
         convertToRupiah(angka: number) {
             var rupiah = '';
             var angkarev = angka.toString().split('').reverse().join('');
@@ -160,6 +175,9 @@ export default defineComponent({
                     </tr>
                 </tbody>
             </table>
+            <div class="flex justify-center mt-5 mb-5">
+                <button v-if="!isScrolledBottom" class="px-4 py-2 rounded-md bg-sky-500 text-sky-100 hover:bg-sky-600" @click="loadMoreData()">Load More</button>
+            </div>
         </div>
 </div>
 </template>
