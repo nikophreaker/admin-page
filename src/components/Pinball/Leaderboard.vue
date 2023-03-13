@@ -3,15 +3,11 @@ import { DocumentData, where, query, doc, setDoc, updateDoc, deleteDoc, limit, o
 import { defineProps, defineComponent, ref } from 'vue';
 import { useFirestore, useCollection, useDocument } from 'vuefire';
 import { db, colPinball, leaderboardRef } from '../../firebase';
-var firstData;
-var lastData;
-var number = 1;
-var leaderboardLists = useCollection(query((leaderboardRef), limit(10), orderBy("score", "desc")))
 export default defineComponent({
     data() {
         return {
             username: ref(),
-            leaderboardList: leaderboardLists,
+            leaderboardList: useCollection(query((leaderboardRef), orderBy("score", "desc"))),
             id: "",
             isOpen: false,
             searchTxt: "",
@@ -25,18 +21,9 @@ export default defineComponent({
     computed: {
         isModalVisible() {
             return this.isOpen;
-        }
+        },
     },
     methods: {
-        onPrevPage(firstData: DocumentData) {
-            this.firstData = firstData
-        },
-        onNextPage(lastData: DocumentData) {
-            this.lastData = lastData
-            leaderboardLists = useCollection(query((leaderboardRef), limit(10), orderBy("score", "desc"), startAfter(lastData)));
-            console.log(lastData);
-            console.log(leaderboardLists);
-        },
         convertToRupiah(angka: number) {
             var rupiah = '';
             var angkarev = angka.toString().split('').reverse().join('');
@@ -172,11 +159,7 @@ export default defineComponent({
                         </td>
                     </tr>
                 </tbody>
-            </table>     
-            <div class="mt-5">
-                <button class="px-4 py-2 rounded-md bg-sky-500 text-sky-100 hover:bg-sky-600" @click="onPrevPage(leaderboardList[0])">Prev</button>
-                <button class="px-4 py-2 pl-4 ml-10 rounded-md bg-sky-500 text-sky-100 hover:bg-sky-600" @click="onNextPage(leaderboardList[9])">Next</button>
-            </div>
+            </table>
         </div>
 </div>
 </template>

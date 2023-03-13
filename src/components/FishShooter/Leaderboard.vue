@@ -7,7 +7,7 @@ export default defineComponent({
     data() {
         return {
             username: ref(),
-            leaderboardList: useCollection(query((leaderboardFishRef), limit(10), orderBy("score", "desc"))),
+            leaderboardList: useCollection(query((leaderboardFishRef), orderBy("score", "desc"))),
             id: "",
             isOpen: false,
             searchTxt: ""
