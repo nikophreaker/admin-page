@@ -4,11 +4,11 @@ import { getStorage, ref as refs, getDownloadURL, uploadString } from 'firebase/
 import { url } from 'inspector';
 import { defineProps, defineComponent, ref } from 'vue'
 import { useFirestore, useCollection, useDocument } from 'vuefire';
-import { db, colVip, colVip2, colVip3, prizeVipRef, kuponVipRef, winnerVipRef } from '../../firebase';
+import { db, colMobile as col, colMobile2 as col2, colMobile3 as col3, prizeMobileRef as prizeRef, kuponMobileRef as kuponRef, winnerMobileRef as winnerRef } from '../../firebase';
 export default defineComponent({
     data() {
         return {
-            prizeList: useCollection(prizeVipRef),
+            prizeList: useCollection(prizeRef),
             id: "",
             url: "",
             imgResult: "",
@@ -18,7 +18,7 @@ export default defineComponent({
             openAdd: false,
             openUpdate: false,
             isOpen: false,
-            searchTxt: ""
+            searchTxt: "",
         };
     },
     computed: {
@@ -77,7 +77,7 @@ export default defineComponent({
                         rings: 1
                     }
                     if (this.url != "" && this.percentage != null && this.prize != "" && this.color != null) {
-                        setDoc(doc(db, colVip, `${id}`), data).then(() => {
+                        setDoc(doc(db, col, `${id}`), data).then(() => {
                             this.id = ""
                             this.url = ""
                             this.percentage = 0
@@ -109,7 +109,7 @@ export default defineComponent({
                             type: "prize",
                             rings: 1
                         }
-                        updateDoc(doc(db, colVip, `${this.id}`), data).then(() => {
+                        updateDoc(doc(db, col, `${this.id}`), data).then(() => {
                             this.id = ""
                             this.url = ""
                             this.percentage = 0
@@ -131,7 +131,7 @@ export default defineComponent({
                     type: "prize",
                     rings: 1
                 }
-                updateDoc(doc(db, colVip, `${this.id}`), data).then(() => {
+                updateDoc(doc(db, col, `${this.id}`), data).then(() => {
                     this.id = ""
                     this.url = ""
                     this.percentage = 0
@@ -142,7 +142,7 @@ export default defineComponent({
             }
         },
         onDelete() {
-            deleteDoc(doc(db, colVip, `${this.id}`));
+            deleteDoc(doc(db, col, `${this.id}`));
             this.isOpen = !this.isOpen;
         },
         onToggle(id: string) {

@@ -4,7 +4,7 @@ import { getStorage, ref as refs, getDownloadURL, uploadString } from 'firebase/
 import { url } from 'inspector';
 import { defineProps, defineComponent, ref } from 'vue'
 import { useFirestore, useCollection, useDocument } from 'vuefire';
-import { db, col, col2, col3, prizeRef, kuponRef, winnerRef } from '../../firebase';
+import { db, colMobile as col, colMobile2 as col2, colMobile3 as col3, prizeMobileRef as prizeRef, kuponMobileRef as kuponRef, winnerMobileRef as winnerRef } from '../../firebase';
 export default defineComponent({
     data() {
         return {

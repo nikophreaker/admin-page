@@ -222,7 +222,7 @@ export default defineComponent({
                     </thead>
                     <tbody class="bg-white">
                         <tr v-for="prize in prizeList.sort((a, b) => a.id - b.id).filter((a) => a.text.includes(searchTxt.toUpperCase()))"
-                            :ref_key="prize.id">
+                            :key="prize.id">
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="flex items-center text-gray-900">
                                     {{ prize.id }}

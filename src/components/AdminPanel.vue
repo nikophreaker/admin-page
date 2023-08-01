@@ -4,6 +4,7 @@ import { RouterView, RouterLink } from 'vue-router';
 import FortuneWheel from './FortuneWheel.vue';
 import Pinball from './Pinball.vue';
 import FortuneWheelVip from './FortuneWheelVip.vue';
+import FortuneWheelMobile from './FortuneWheelMobile.vue';
 import FishShooter from './FishShooter.vue';
 import Scratch from './Scratch.vue';
 export default defineComponent({
@@ -43,7 +44,7 @@ export default defineComponent({
             console.log(localStorage.getItem("token"));
         }
     },
-    components: { FortuneWheel, FortuneWheelVip, Pinball, FishShooter, Scratch }
+    components: { FortuneWheel, FortuneWheelVip, FortuneWheelMobile, Pinball, FishShooter, Scratch }
 })
 </script>
 
@@ -92,22 +93,28 @@ export default defineComponent({
                 <li class="relative">
                     <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
                         href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(3)"
-                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 3, 'text-white bg-pink-600': openNav === 3 }">Pinball</a>
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 3, 'text-white bg-pink-600 ': openNav === 3 }">Fortune
+                        Wheel Mobile</a>
                 </li>
                 <li class="relative">
                     <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
                         href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(4)"
-                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 4, 'text-white bg-pink-600': openNav === 4 }">Fish Shooter</a>
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 4, 'text-white bg-pink-600': openNav === 4 }">Pinball</a>
                 </li>
                 <li class="relative">
                     <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
                         href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(5)"
-                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 5, 'text-white bg-pink-600': openNav === 5 }">Scratch</a>
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 5, 'text-white bg-pink-600': openNav === 5 }">Fish Shooter</a>
                 </li>
                 <li class="relative">
                     <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
                         href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(6)"
-                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 6, 'text-white bg-pink-600': openNav === 6 }">Coming
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 6, 'text-white bg-pink-600': openNav === 6 }">Scratch</a>
+                </li>
+                <li class="relative">
+                    <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
+                        href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(7)"
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 7, 'text-white bg-pink-600': openNav === 7 }">Coming
                         Soon</a>
                 </li>
             </ul>
@@ -120,16 +127,19 @@ export default defineComponent({
         <div :class="{ 'hidden': openNav !== 2, 'block': openNav === 2 }">
             <FortuneWheelVip />
         </div>
-        <div :class="{ 'hidden': openNav !== 3, 'block': openNav === 3 }">
+        <div :class="{ 'hidden': openNav !== 3, 'block': openNav === 2 }">
+            <FortuneWheelMobile />
+        </div>
+        <div :class="{ 'hidden': openNav !== 4, 'block': openNav === 3 }">
             <Pinball />
         </div>
-        <div :class="{ 'hidden': openNav !== 4, 'block': openNav === 4 }">
+        <div :class="{ 'hidden': openNav !== 5, 'block': openNav === 4 }">
             <FishShooter />
         </div>
-        <div :class="{ 'hidden': openNav !== 5, 'block': openNav === 5 }">
+        <div :class="{ 'hidden': openNav !== 6, 'block': openNav === 5 }">
             <Scratch />
         </div>
-        <div :class="{ 'hidden': openNav !== 6, 'block': openNav === 6 }">
+        <div :class="{ 'hidden': openNav !== 7, 'block': openNav === 6 }">
             <h1 class="text-center text-black relative py-96">COOMING SOON!</h1>
         </div>
 </div>

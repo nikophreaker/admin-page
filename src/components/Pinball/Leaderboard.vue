@@ -129,7 +129,7 @@ export default defineComponent({
                     </tr>
                 </thead>
                 <tbody class="bg-white">
-                    <tr v-for="leaderboard in leaderboardList.filter((a) => a.name.includes(searchTxt.toUpperCase()) || a.date.includes(searchTxt.toUpperCase()) || a.id.includes(searchTxt.toUpperCase()))" :ref_key="leaderboard.id">
+                    <tr v-for="leaderboard in leaderboardList.filter((a) => a.name.includes(searchTxt.toUpperCase()) || a.date.includes(searchTxt.toUpperCase()) || a.id.includes(searchTxt.toUpperCase()))" :key="leaderboard.id">
                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                             <div class="flex items-center text-gray-900">
                                 {{ leaderboardList.indexOf(leaderboard) + 1 }}
