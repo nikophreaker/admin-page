@@ -19,6 +19,7 @@ export default defineComponent({
             openUpdate: false,
             isOpen: false,
             searchTxt: "",
+            img:""
         };
     },
     computed: {
@@ -64,6 +65,7 @@ export default defineComponent({
             uploadString(storageRef, this.imgResult, 'data_url').then((snapshot) => {
                 getDownloadURL(snapshot.ref).then((downloadURL) => {
                     this.url = downloadURL
+                    console.log(`add = ${this.url}`)
                     let id = prize != undefined ? parseInt(prize.id) + 1 : 1;
                     let data = {
                         id: id,
@@ -94,10 +96,11 @@ export default defineComponent({
             var time = Date.now().toString();
             const storage = getStorage();
             const storageRef = refs(storage, `slice/${time}.png`);
-            if (this.url == "" || null || undefined) {
+            if (this.url == "" || null || undefined || this.url.includes("blob")) {
                 uploadString(storageRef, this.imgResult, 'data_url').then((snapshot) => {
                     getDownloadURL(snapshot.ref).then((downloadURL) => {
                         this.url = downloadURL
+                        console.log(`update = ${this.url}`)
                         let data = {
                             id: parseInt(this.id),
                             icon: this.url,
@@ -230,7 +233,7 @@ export default defineComponent({
                             </td>
 
                             <td class="py-4 whitespace-no-wrap border-b border-gray-200">
-                                <img class="w-16" :src="prize.icon" />
+                                <img class="w-16" :src="prize.icon"/>
                             </td>
 
                             <td class="py-4 whitespace-no-wrap border-b border-gray-200 text-gray-900">
@@ -267,7 +270,7 @@ export default defineComponent({
         <div
             :class="{ 'w-full px-6 py-4 bg-white rounded shadow-md ring-1 ring-gray-900/10': true, 'hidden': !openUpdate }">
             <form method="POST" action="" @submit.prevent="false">
-
+                <h5 class="text-gray-700">{{ openAdd ? "Add Prize": "Update Prize"}}</h5>
                 <div>
                     <label class="flex text-sm font-bold text-gray-700" for="icon">
                         Icon
