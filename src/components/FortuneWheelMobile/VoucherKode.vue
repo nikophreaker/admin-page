@@ -3,6 +3,7 @@ import { DocumentData, where, query, doc, getDocs, setDoc, updateDoc, deleteDoc 
 import { defineProps, defineComponent, ref } from 'vue';
 import { useFirestore, useCollection, useDocument } from 'vuefire';
 import { db, colMobile as col, colMobile2 as col2, colMobile3 as col3, prizeMobileRef as prizeRef, kuponMobileRef as kuponRef, winnerMobileRef as winnerRef } from '../../firebase';
+
 export default defineComponent({
     data() {
         return {
@@ -13,7 +14,8 @@ export default defineComponent({
             openAdd: false,
             openUpdate: false,
             isOpen: false,
-            searchTxt: ""
+            searchTxt: "",
+            error: false
         };
     },
     computed: {
@@ -48,10 +50,12 @@ export default defineComponent({
             }
         },
         onClickAdd() {
+            this.error = false;
             this.openAdd = true;
             this.openUpdate = !this.openUpdate;
         },
         onClickUpdate(kupon: DocumentData) {
+            this.error = false;
             this.openAdd = false;
             this.openUpdate = !this.openUpdate;
             if (this.openUpdate === true) {
@@ -64,14 +68,16 @@ export default defineComponent({
                 this.status = true
             }
         },
-        onAdd(kupon: DocumentData) {
+        async onAdd(kupon: DocumentData) {
             let id = kupon != undefined ? parseInt(kupon.id) + 1 : 1;
             let data = {
                 id: id,
                 kode: this.kode.toUpperCase(),
                 active: this.status,
             }
-            if (this.kode != "" && this.status != null) {
+            const q = query(kuponRef, where("kode", "==", data.kode));
+            const querySnapshot = await getDocs(q);
+            if (this.kode != "" && this.status != null && querySnapshot.size == 0) {
                 setDoc(doc(db, col2, `${id}`), data).then(() => {
                     this.id = ""
                     this.kode = ""
@@ -79,6 +85,8 @@ export default defineComponent({
                     this.openUpdate = !this.openUpdate;
                     this.openAdd = false;
                 });
+            } else {
+                this.error = true;
             }
         },
         onUpdate() {
@@ -215,7 +223,7 @@ export default defineComponent({
         <div
             :class="{ 'w-full px-6 py-4 bg-white rounded shadow-md ring-1 ring-gray-900/10': true, 'hidden': !openUpdate }">
             <form method="POST" action="" @submit.prevent="false">
-
+                <h5 class="text-gray-700">{{ openAdd ? "Add Voucher Code": "Update Voucher Code"}}</h5>
                 <div>
                     <label class="flex text-sm font-bold text-gray-700">
                         Kode
@@ -237,6 +245,7 @@ export default defineComponent({
                     </select>
                 </div>
 
+                <h5 class="text-red-700 mt-2 text-start" :hidden="!error">Can't double code</h5>
                 <div class="flex items-center justify-start mt-4 gap-x-2">
                     <button type="submit" @click="onAdd(kuponList.sort((a, b) => a.id - b.id)[kuponList.length - 1])"
                         :class="{ 'px-6 py-2 text-sm font-semibold rounded-md shadow-md text-sky-100 bg-sky-500 hover:bg-sky-700 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300': true, 'hidden': !openAdd }">
