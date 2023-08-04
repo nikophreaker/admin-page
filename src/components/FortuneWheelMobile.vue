@@ -8,6 +8,7 @@ import { db, prizeRef, kuponRef, winnerRef } from '../firebase';
 import PrizeList from './FortuneWheelMobile/PrizeList.vue';
 import VoucherKode from './FortuneWheelMobile/VoucherKode.vue';
 import Winner from './FortuneWheelMobile/Winner.vue';
+import Settings from './FortuneWheelMobile/Settings.vue';
 export default defineComponent({
     data() {
         return {
@@ -120,7 +121,7 @@ export default defineComponent({
             deleteDoc(doc(db, "luckyspin", `${prize.id}`));
         }
     },
-    components: { PrizeList, VoucherKode, Winner }
+    components: { PrizeList, VoucherKode, Winner, Settings }
 })
 </script>
 
@@ -148,6 +149,13 @@ export default defineComponent({
                     Winner
                 </a>
             </li>
+            <li class="-mb-px mr-2 last:mr-0 flex-auto text-center">
+                <a class="text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal"
+                    @click="toggleTabs(4)"
+                    :class="{ 'text-pink-600 bg-white': openTab !== 4, 'text-white bg-pink-600': openTab === 4 }">
+                    Settings
+                </a>
+            </li>
         </ul>
         <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded">
             <div class="tab-content tab-space">
@@ -159,6 +167,9 @@ export default defineComponent({
                 </div>
                 <div :class="{ 'hidden': openTab !== 3, 'block': openTab === 3 }">
                     <Winner />
+                </div>
+                <div :class="{ 'hidden': openTab !== 4, 'block': openTab === 4 }">
+                    <Settings />
                 </div>
             </div>
         </div>
