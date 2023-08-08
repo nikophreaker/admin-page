@@ -93,7 +93,7 @@ export default defineComponent({
                         </tr>
                     </thead>
                     <tbody class="bg-white">
-                        <tr v-for="winner, index in winnerList.sort((a, b) => b.timestamp - a.timestamp).filter((a) => a.kupon.includes(searchTxt.toUpperCase()) || a.prize.includes(searchTxt.toUpperCase()) || a.tanggal.includes(searchTxt.toUpperCase()))" :key="winner.id">
+                        <tr v-for="winner, index in winnerList.sort((a, b) => b.timestamp - a.timestamp).filter((a) => a.kupon.includes(searchTxt.toUpperCase()) || a.prize.includes(searchTxt.toUpperCase()) || a.date.includes(searchTxt.toUpperCase()))" :key="winner.id">
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="flex items-center text-gray-900">
                                     {{ index + 1 }}
@@ -109,8 +109,7 @@ export default defineComponent({
                             </td>
 
                             <td class="py-4 text-sm leading-5 whitespace-no-wrap border-b border-gray-200 text-gray-900">
-                                <p class="flex">{{ winner.tanggal }}</p>
-                                <p class="flex">{{ winner.waktu }}</p>
+                                <p class="flex">{{ winner.date }}</p>
                             </td>
 
                             <td class="text-sm font-medium leading-5 whitespace-no-wrap border-b border-gray-200 ">

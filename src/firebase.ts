@@ -45,7 +45,7 @@ export const winnerMobileRef = collection(db, colMobile3)
 // Scratch firestore
 export const colScratch = "scratch";
 export const colScratch2 = "kuponscratch";
-export const colScratch3 = "prizescratch";
+export const colScratch3 = "prize-scratch";
 export const prizeScratchRef = collection(db, colScratch)
 export const kuponScratchRef = collection(db, colScratch2)
 export const winnerScratchRef = collection(db, colScratch3)
