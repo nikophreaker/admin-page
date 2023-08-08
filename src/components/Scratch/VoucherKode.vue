@@ -64,14 +64,16 @@ export default defineComponent({
                 this.status = true
             }
         },
-        onAdd(kupon: DocumentData) {
+        async onAdd(kupon: DocumentData) {
             let id = kupon != undefined ? parseInt(kupon.id) + 1 : 1;
             let data = {
                 id: id,
                 kode: this.kode.toUpperCase(),
                 active: this.status,
             }
-            if (this.kode != "" && this.status != null) {
+            const q = query(kuponScratchRef, where("kode", "==", data.kode));
+            const querySnapshot = await getDocs(q);
+            if (this.kode != "" && this.status != null && querySnapshot.size == 0) {
                 setDoc(doc(db, colScratch2, `${id}`), data).then(() => {
                     this.id = ""
                     this.kode = ""
