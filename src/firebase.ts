@@ -61,3 +61,7 @@ export const leaderboardFishRef = collection(db, colFish);
 // fish2 firestore
 export const colFish2 = "akumaujuara-fishshoot-leaderboard";
 export const leaderboardFishRef2 = collection(db, colFish2);
+
+// akumaujuara-users firestore
+export const colUser = "akumaujuara-users";
+export const akumaujuaraUserRef = collection(db, colUser);

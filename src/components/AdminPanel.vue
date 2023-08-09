@@ -8,6 +8,7 @@ import FortuneWheelMobile from './FortuneWheelMobile.vue';
 import FishShooter from './FishShooter.vue';
 import FishShooterJuara from './FishShooterJuara.vue';
 import Scratch from './Scratch.vue';
+import AkuMauJuaraUsers from './AkuMauJuaraUsers.vue';
 export default defineComponent({
     data() {
         return {
@@ -45,7 +46,7 @@ export default defineComponent({
             console.log(localStorage.getItem("token"));
         }
     },
-    components: { FortuneWheel, FortuneWheelVip, FortuneWheelMobile, Pinball, FishShooter, FishShooterJuara, Scratch }
+    components: { FortuneWheel, FortuneWheelVip, FortuneWheelMobile, Pinball, FishShooter, FishShooterJuara, AkuMauJuaraUsers, Scratch }
 })
 </script>
 
@@ -120,7 +121,12 @@ export default defineComponent({
                 <li class="relative">
                     <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
                         href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(8)"
-                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 8, 'text-white bg-pink-600': openNav === 8 }">Coming
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 8, 'text-white bg-pink-600': openNav === 8 }">Users-AkuMauJuara</a>
+                </li>
+                <li class="relative">
+                    <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
+                        href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(9)"
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 9, 'text-white bg-pink-600': openNav === 9 }">Coming
                         Soon</a>
                 </li>
             </ul>
@@ -149,6 +155,9 @@ export default defineComponent({
             <Scratch />
         </div>
         <div :class="{ 'hidden': openNav !== 8, 'block': openNav === 8 }">
+            <Scratch />
+        </div>
+        <div :class="{ 'hidden': openNav !== 9, 'block': openNav === 9 }">
             <h1 class="text-center text-black relative py-96">COOMING SOON!</h1>
         </div>
 </div>
