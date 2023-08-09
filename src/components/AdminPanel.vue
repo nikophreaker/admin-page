@@ -155,7 +155,7 @@ export default defineComponent({
             <Scratch />
         </div>
         <div :class="{ 'hidden': openNav !== 8, 'block': openNav === 8 }">
-            <Scratch />
+            <AkuMauJuaraUsers />
         </div>
         <div :class="{ 'hidden': openNav !== 9, 'block': openNav === 9 }">
             <h1 class="text-center text-black relative py-96">COOMING SOON!</h1>
