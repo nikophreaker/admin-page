@@ -2,13 +2,13 @@
 import { DocumentData, where, query, doc, setDoc, updateDoc, deleteDoc, limit, orderBy, startAfter } from 'firebase/firestore';
 import { defineProps, defineComponent, ref } from 'vue';
 import { useFirestore, useCollection, useDocument } from 'vuefire';
-import { db, colFish, leaderboardFishRef } from '../../firebase';
+import { db, colFish2, leaderboardFishRef2 } from '../../firebase';
 var limits = 10;
 export default defineComponent({
     data() {
         return {
             username: ref(),
-            leaderboardList: useCollection(query((leaderboardFishRef), limit(limits), orderBy("score", "desc"))),
+            leaderboardList: useCollection(query((leaderboardFishRef2), limit(limits), orderBy("score", "desc"))),
             id: "",
             isOpen: false,
             searchTxt: "",
@@ -29,7 +29,7 @@ export default defineComponent({
     methods: {
         loadMoreData() {
             limits += 10;
-            const newList = useCollection(query((leaderboardFishRef), orderBy("score", "desc"), limit(limits)));
+            const newList = useCollection(query((leaderboardFishRef2), orderBy("score", "desc"), limit(limits)));
             newList.promise.value.then((data) => {
                 console.log(this.leaderboardList.length+ "==" +newList.value.length);
                 if (this.leaderboardList.length != data.length) {
@@ -49,12 +49,12 @@ export default defineComponent({
             return rupiah.split('', rupiah.length - 1).reverse().join('');
         },
         onDelete() {
-            deleteDoc(doc(db, colFish, `${this.id}`));
+            deleteDoc(doc(db, colFish2, `${this.id}`));
             this.isOpen = !this.isOpen;
         },
         onDeleteId(id: string) {
             if (confirm(`Yakin untuk menghapus ${id} ?`)) {
-                deleteDoc(doc(db, colFish, `${id}`));
+                deleteDoc(doc(db, colFish2, `${id}`));
             } else {
 
             }
@@ -117,6 +117,9 @@ export default defineComponent({
                             Username</th>
                         <th
                             class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                            Email</th>
+                        <th
+                            class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                             No. HP</th>
                         <th
                             class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
@@ -129,7 +132,7 @@ export default defineComponent({
                     </tr>
                 </thead>
                 <tbody class="bg-white">
-                    <tr v-for="leaderboard in leaderboardList.filter((a) => a.name.includes(searchTxt.toUpperCase()) || a.date.includes(searchTxt.toUpperCase()) || a.id.includes(searchTxt.toUpperCase()))" :key="leaderboard.id">
+                    <tr v-for="leaderboard in leaderboardList.filter((a) => a.name.includes(searchTxt.toUpperCase()) || a.date.includes(searchTxt.toUpperCase()) || a.email.includes(searchTxt.toUpperCase()) || a.phone.includes(searchTxt.toUpperCase()))" :key="leaderboard.id">
                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                             <div class="flex items-center text-gray-900">
                                 {{ leaderboardList.indexOf(leaderboard) + 1 }}
@@ -142,7 +145,12 @@ export default defineComponent({
                         </td>
 
                         <td class="py-4 whitespace-no-wrap border-b border-gray-200">
-                            <div class="flex text-sm leading-5 text-gray-900">{{ leaderboard.id }}
+                            <div class="flex text-sm leading-5 text-gray-900">{{ leaderboard.email }}
+                            </div>
+                        </td>
+
+                        <td class="py-4 whitespace-no-wrap border-b border-gray-200">
+                            <div class="flex text-sm leading-5 text-gray-900">{{ leaderboard.phone }}
                             </div>
                         </td>
 
