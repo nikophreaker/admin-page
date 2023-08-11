@@ -8,7 +8,7 @@ export default defineComponent({
     data() {
         return {
             username: ref(),
-            leaderboardList: useCollection(query((akumaujuaraUserRef), limit(limits), orderBy("score", "desc"))),
+            leaderboardList: useCollection(query((akumaujuaraUserRef), limit(limits))),
             id: "",
             isOpen: false,
             searchTxt: "",
@@ -29,7 +29,7 @@ export default defineComponent({
     methods: {
         loadMoreData() {
             limits += 10;
-            const newList = useCollection(query((akumaujuaraUserRef), orderBy("score", "desc"), limit(limits)));
+            const newList = useCollection(query((akumaujuaraUserRef), limit(limits)));
             newList.promise.value.then((data) => {
                 console.log(this.leaderboardList.length+ "==" +newList.value.length);
                 if (this.leaderboardList.length != data.length) {
@@ -38,15 +38,6 @@ export default defineComponent({
                     this.hasScrolledToBottom = !this.hasScrolledToBottom;
                 }
             })
-        },
-        convertToRupiah(angka: number) {
-            var rupiah = '';
-            var angkarev = angka.toString().split('').reverse().join('');
-
-            for (var i = 0; i < angkarev.length; i++)
-                if (i % 3 == 0) rupiah += angkarev.substr(i, 3) + '.';
-
-            return rupiah.split('', rupiah.length - 1).reverse().join('');
         },
         onDelete() {
             deleteDoc(doc(db, colUser, `${this.id}`));
@@ -111,7 +102,7 @@ export default defineComponent({
                     <tr>
                         <th
                             class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                            Rank</th>
+                            No</th>
                         <th
                             class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                             Username</th>
@@ -121,18 +112,13 @@ export default defineComponent({
                         <th
                             class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                             No. HP</th>
-                        <th
-                            class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                            Score</th>
-                        <th
-                            class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                            Date</th>
+                        
                         <th class="py-3 text-sm text-left text-gray-500 border-b border-gray-200 bg-gray-50" colspan="4">
                             Action</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white">
-                    <tr v-for="leaderboard in leaderboardList.filter((a) => a.name.includes(searchTxt.toUpperCase()) || a.date.includes(searchTxt.toUpperCase()) || a.email.includes(searchTxt.toUpperCase()) || a.phone.includes(searchTxt.toUpperCase()))" :key="leaderboard.id">
+                    <tr v-for="leaderboard in leaderboardList.filter((a) => a.Fullname.includes(searchTxt.toUpperCase()) || a.Email.includes(searchTxt.toUpperCase()) || a.Phone.includes(searchTxt.toUpperCase()))" :key="leaderboard.id">
                         <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                             <div class="flex items-center text-gray-900">
                                 {{ leaderboardList.indexOf(leaderboard) + 1 }}
@@ -140,26 +126,18 @@ export default defineComponent({
                         </td>
 
                         <td class="py-4 whitespace-no-wrap border-b border-gray-200">
-                            <div class="flex text-sm leading-5 text-gray-900">{{ leaderboard.name }}
+                            <div class="flex text-sm leading-5 text-gray-900">{{ leaderboard.Fullname }}
                             </div>
                         </td>
 
                         <td class="py-4 whitespace-no-wrap border-b border-gray-200">
-                            <div class="flex text-sm leading-5 text-gray-900">{{ leaderboard.email }}
+                            <div class="flex text-sm leading-5 text-gray-900">{{ leaderboard.Email }}
                             </div>
                         </td>
 
                         <td class="py-4 whitespace-no-wrap border-b border-gray-200">
-                            <div class="flex text-sm leading-5 text-gray-900">{{ leaderboard.phone }}
+                            <div class="flex text-sm leading-5 text-gray-900">{{ leaderboard.Phone }}
                             </div>
-                        </td>
-
-                        <td class="py-4 whitespace-no-wrap border-b border-gray-200 text-gray-900">
-                            <p class="flex">{{ convertToRupiah(leaderboard.score) }}</p>
-                        </td>
-
-                        <td class="flex py-4 text-sm leading-5 whitespace-no-wrap border-b border-gray-200 text-gray-900">
-                            <span>{{ leaderboard.date }}</span>
                         </td>
 
                         <td

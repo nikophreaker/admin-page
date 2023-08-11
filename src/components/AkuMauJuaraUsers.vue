@@ -2,7 +2,7 @@
 import { defineProps, defineComponent, ref } from 'vue'
 import { useFirestore, useCollection, useDocument } from 'vuefire';
 import { akumaujuaraUserRef } from '../firebase';
-import Leaderboard from './FishShooterJuara/Leaderboard.vue';
+import Leaderboard from './AkuMauJuaraUsers/Leaderboard.vue';
 export default defineComponent({
     data() {
         return {
