@@ -5,6 +5,7 @@ import FortuneWheel from './FortuneWheel.vue';
 import Pinball from './Pinball.vue';
 import FortuneWheelVip from './FortuneWheelVip.vue';
 import FortuneWheelMobile from './FortuneWheelMobile.vue';
+import FortuneWheelM from './FortuneWheelM.vue';
 import FishShooter from './FishShooter.vue';
 import FishShooterJuara from './FishShooterJuara.vue';
 import Scratch from './Scratch.vue';
@@ -46,7 +47,7 @@ export default defineComponent({
             console.log(localStorage.getItem("token"));
         }
     },
-    components: { FortuneWheel, FortuneWheelVip, FortuneWheelMobile, Pinball, FishShooter, FishShooterJuara, AkuMauJuaraUsers, Scratch }
+    components: { FortuneWheel, FortuneWheelVip, FortuneWheelMobile, FortuneWheelM, Pinball, FishShooter, FishShooterJuara, AkuMauJuaraUsers, Scratch }
 })
 </script>
 
@@ -101,32 +102,38 @@ export default defineComponent({
                 <li class="relative">
                     <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
                         href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(4)"
-                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 4, 'text-white bg-pink-600': openNav === 4 }">Pinball</a>
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 4, 'text-white bg-pink-600 ': openNav === 4 }">Fortune
+                        Wheel M88</a>
                 </li>
                 <li class="relative">
                     <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
                         href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(5)"
-                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 5, 'text-white bg-pink-600': openNav === 5 }">Fish Shooter</a>
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 5, 'text-white bg-pink-600': openNav === 5 }">Pinball</a>
                 </li>
                 <li class="relative">
                     <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
                         href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(6)"
-                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 6, 'text-white bg-pink-600': openNav === 6 }">Fish Shooter Juara</a>
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 6, 'text-white bg-pink-600': openNav === 6 }">Fish Shooter</a>
                 </li>
                 <li class="relative">
                     <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
                         href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(7)"
-                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 7, 'text-white bg-pink-600': openNav === 7 }">Scratch</a>
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 7, 'text-white bg-pink-600': openNav === 7 }">Fish Shooter Juara</a>
                 </li>
                 <li class="relative">
                     <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
                         href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(8)"
-                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 8, 'text-white bg-pink-600': openNav === 8 }">Users-AkuMauJuara</a>
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 8, 'text-white bg-pink-600': openNav === 8 }">Scratch</a>
                 </li>
                 <li class="relative">
                     <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
                         href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(9)"
-                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 9, 'text-white bg-pink-600': openNav === 9 }">Coming
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 9, 'text-white bg-pink-600': openNav === 9 }">Users-AkuMauJuara</a>
+                </li>
+                <li class="relative">
+                    <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
+                        href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(10)"
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 10, 'text-white bg-pink-600': openNav === 10 }">Coming
                         Soon</a>
                 </li>
             </ul>
@@ -143,21 +150,24 @@ export default defineComponent({
             <FortuneWheelMobile />
         </div>
         <div :class="{ 'hidden': openNav !== 4, 'block': openNav === 4 }">
-            <Pinball />
+            <FortuneWheelM />
         </div>
         <div :class="{ 'hidden': openNav !== 5, 'block': openNav === 5 }">
-            <FishShooter />
+            <Pinball />
         </div>
         <div :class="{ 'hidden': openNav !== 6, 'block': openNav === 6 }">
-            <FishShooterJuara />
+            <FishShooter />
         </div>
         <div :class="{ 'hidden': openNav !== 7, 'block': openNav === 7 }">
-            <Scratch />
+            <FishShooterJuara />
         </div>
         <div :class="{ 'hidden': openNav !== 8, 'block': openNav === 8 }">
-            <AkuMauJuaraUsers />
+            <Scratch />
         </div>
         <div :class="{ 'hidden': openNav !== 9, 'block': openNav === 9 }">
+            <AkuMauJuaraUsers />
+        </div>
+        <div :class="{ 'hidden': openNav !== 10, 'block': openNav === 10 }">
             <h1 class="text-center text-black relative py-96">COOMING SOON!</h1>
         </div>
 </div>
