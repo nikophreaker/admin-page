@@ -97,6 +97,8 @@ export default defineComponent({
             let data = {
                 id: parseInt(this.id),
                 kode: this.kode.toUpperCase(),
+                fixed: this.fixed,
+                idPrize: parseInt(this.idPrize),
                 active: this.status,
             }
             updateDoc(doc(db, colM2, `${this.id}`), data).then(() => {
