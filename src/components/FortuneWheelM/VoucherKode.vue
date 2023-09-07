@@ -9,6 +9,8 @@ export default defineComponent({
             kuponList: useCollection(kuponMRef),
             id: "",
             kode: "",
+            fixed: false,
+            idPrize: "",
             status: true,
             openAdd: false,
             openUpdate: false,
@@ -39,6 +41,8 @@ export default defineComponent({
                 let data = {
                     id: id,
                     kode: result.toUpperCase(),
+                    fixed: false,
+                    idPrize: "",
                     active: true,
                 }
                 setDoc(doc(db, colM2, `${id}`), data);
@@ -57,10 +61,14 @@ export default defineComponent({
             if (this.openUpdate === true) {
                 this.id = kupon.id
                 this.kode = kupon.kode
+                this.fixed= kupon.fixed
+                this.idPrize = kupon.idPrize
                 this.status = kupon.active
             } else {
                 this.id = ""
                 this.kode = ""
+                this.fixed= false
+                this.idPrize = ""
                 this.status = true
             }
         },
@@ -69,12 +77,16 @@ export default defineComponent({
             let data = {
                 id: id,
                 kode: this.kode.toUpperCase(),
+                fixed: false,
+                idPrize: "",
                 active: this.status,
             }
             if (this.kode != "" && this.status != null) {
                 setDoc(doc(db, colM2, `${id}`), data).then(() => {
                     this.id = ""
                     this.kode = ""
+                    this.fixed = false
+                    this.idPrize = "",
                     this.status = true
                     this.openUpdate = !this.openUpdate;
                     this.openAdd = false;
@@ -90,6 +102,8 @@ export default defineComponent({
             updateDoc(doc(db, colM2, `${this.id}`), data).then(() => {
                 this.id = ""
                 this.kode = ""
+                this.fixed = false
+                this.idPrize = ""
                 this.status = true
             });
             this.openUpdate = !this.openUpdate;
@@ -168,6 +182,12 @@ export default defineComponent({
                             <th
                                 class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                                 Status</th>
+                            <th
+                                class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                                Fixed</th>
+                            <th
+                                class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
+                                No Prize</th>
                             <th class="py-3 text-sm text-left text-gray-500 border-b border-gray-200 bg-gray-50"
                                 colspan="4">
                                 Action</th>
@@ -187,6 +207,14 @@ export default defineComponent({
 
                             <td class="py-4 text-sm leading-5 whitespace-no-wrap border-b border-gray-200 text-gray-900">
                                 <p class="flex">{{ kupon.active ? "Aktif" : "Tidak Aktif" }}</p>
+                            </td>
+
+                            <td class="py-4 text-sm leading-5 whitespace-no-wrap border-b border-gray-200 text-gray-900">
+                                <p class="flex">{{ kupon.fixed ? "Aktif" : "Tidak Aktif" }}</p>
+                            </td>
+
+                            <td class="py-4 whitespace-no-wrap border-b border-gray-200 text-gray-900">
+                                <p class="flex">{{ kupon.idPrize }}</p>
                             </td>
 
                             <td
@@ -235,6 +263,27 @@ export default defineComponent({
                         <option :value="true">Aktif</option>
                         <option :value="false">Tidak Aktif</option>
                     </select>
+                </div>
+
+                <div class="mt-4">
+                    <label class="flex text-sm font-bold text-gray-700">
+                        Fixed
+                    </label>
+                    <select class="flex text-sm" v-model="fixed">
+                        <option :value="true">Aktif</option>
+                        <option :value="false">Tidak Aktif</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="flex text-sm font-bold text-gray-700">
+                        No Prize
+                    </label>
+                    <div>
+                        <input
+                            class="block mt-1 border-gray-300 rounded-md shadow-sm placeholder:text-gray-400 placeholder:text-right focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                            type="text" maxlength="5" v-model="idPrize" style="text-transform:uppercase" required />
+                    </div>
                 </div>
 
                 <div class="flex items-center justify-start mt-4 gap-x-2">
