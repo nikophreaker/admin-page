@@ -43,7 +43,7 @@ export default defineComponent({
         <p class="text-3xl text-gray-700 font-bold mb-5">
             Admin Login
         </p>
-        <form>
+        <form @submit.prevent="login">
             <!-- <p class="text-blue-500 text-lg">
                 Vue and Tailwind CSS in action
             </p> -->
@@ -61,8 +61,8 @@ export default defineComponent({
                     {{ show === "password" ? "Show" : "Hide"}}</button>
             </div>
             <br />
-            <button @click="login" class="text-white bg-gray-600" type="button" name="login"
-                value="login">Login</button>
+            <input class="text-white bg-gray-600 px-5 py-2 hover:bg-gray-800 hover:cursor-pointer" type="submit" name="login"
+                value="Login"/>
         </form>
     </div>
 </template>
