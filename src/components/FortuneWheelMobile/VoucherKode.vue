@@ -24,6 +24,14 @@ export default defineComponent({
         }
     },
     methods: {
+        preventRedudant: function (val: DocumentData, idx: number, arr: DocumentData[]) {
+          for(var i = 0; i < idx; i++) {
+            if(arr[i].id === val.id) {
+              return false;
+            }
+          }
+          return true;
+        },
         async makeCode(length: number) {
             let result = '';
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -182,7 +190,7 @@ export default defineComponent({
                         </tr>
                     </thead>
                     <tbody class="bg-white">
-                        <tr v-for="kupon in kuponList.sort((a, b) => a.id - b.id).filter((a) => a.kode.includes(searchTxt.toUpperCase()))" :key="kupon.id">
+                        <tr v-for="kupon in kuponList.filter(preventRedudant).sort((a, b) => a.id - b.id).filter((a) => a.kode.includes(searchTxt.toUpperCase()))" :key="kupon.id">
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="flex items-center text-gray-900">
                                     {{ kupon.id }}

@@ -28,6 +28,14 @@ export default defineComponent({
         }
     },
     methods: {
+        preventRedudant: function (val: DocumentData, idx: number, arr: DocumentData[]) {
+          for(var i = 0; i < idx; i++) {
+            if(arr[i].id === val.id) {
+              return false;
+            }
+          }
+          return true;
+        },
         onFileChange(e: any) {
             const image = e.target.files[0];
             const reader = new FileReader();
@@ -224,7 +232,7 @@ export default defineComponent({
                         </tr>
                     </thead>
                     <tbody class="bg-white">
-                        <tr v-for="prize in prizeList.sort((a, b) => a.id - b.id).filter((a) => a.text.includes(searchTxt.toUpperCase()))"
+                        <tr v-for="prize in prizeList.filter(preventRedudant).sort((a, b) => a.id - b.id).filter((a) => a.text.includes(searchTxt.toUpperCase()))"
                             :key="prize.id">
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="flex items-center text-gray-900">
