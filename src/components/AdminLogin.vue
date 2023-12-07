@@ -58,11 +58,11 @@ export default defineComponent({
                     id="password" placeholder="Password" required v-model="password" />
                 <button @click="showPassword" type="button"
                     class="text-white absolute right-2.5 bottom-1 bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-extralight rounded-lg text-sm px-4 py-2 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-                    {{ show === "password" ? "Show" : "Hide"}}</button>
+                    {{ show === "password" ? "Show" : "Hide" }}</button>
             </div>
             <br />
-            <input class="text-white bg-gray-600 px-5 py-2 hover:bg-gray-800 hover:cursor-pointer" type="submit" name="login"
-                value="Login"/>
+            <input class="text-white bg-gray-600 px-5 py-2 hover:bg-gray-800 hover:cursor-pointer" type="submit"
+                name="login" value="Login" @keypress.enter="login" />
         </form>
     </div>
 </template>

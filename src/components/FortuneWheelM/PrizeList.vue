@@ -28,12 +28,12 @@ export default defineComponent({
     },
     methods: {
         preventRedudant: function (val: DocumentData, idx: number, arr: DocumentData[]) {
-          for(var i = 0; i < idx; i++) {
-            if(arr[i].id === val.id) {
-              return false;
+            for (var i = 0; i < idx; i++) {
+                if (arr[i].id === val.id) {
+                    return false;
+                }
             }
-          }
-          return true;
+            return true;
         },
         onFileChange(e: any) {
             const image = e.target.files[0];
@@ -97,12 +97,37 @@ export default defineComponent({
                     }
                 });
             });
+            this.$refs.fileupload.value = null;
         },
         onUpdate() {
             var time = Date.now().toString();
             const storage = getStorage();
             const storageRef = refs(storage, `slice/${time}.png`);
-            if (this.url == "" || null || undefined) {
+            // uploadString(storageRef, this.imgResult, 'data_url').then((snapshot) => {
+            //     getDownloadURL(snapshot.ref).then((downloadURL) => {
+            //         this.url = downloadURL
+            //         let data = {
+            //             id: parseInt(this.id),
+            //             icon: this.url,
+            //             percentage: `${this.percentage}`,
+            //             sliceText: this.prize.toUpperCase(),
+            //             text: this.prize.toUpperCase(),
+            //             startColor: this.color.replace("#", "0x"),
+            //             endColor: this.color.replace("#", "0x"),
+            //             type: "prize",
+            //             rings: 1
+            //         }
+            //         updateDoc(doc(db, colM, `${this.id}`), data).then(() => {
+            //             this.id = ""
+            //             this.url = ""
+            //             this.percentage = 0
+            //             this.color = ""
+            //             this.prize = ""
+            //         });
+            //         this.openUpdate = !this.openUpdate;
+            //     });
+            // });
+            if (this.imgResult != "" && this.imgResult != null && this.imgResult != undefined) {
                 uploadString(storageRef, this.imgResult, 'data_url').then((snapshot) => {
                     getDownloadURL(snapshot.ref).then((downloadURL) => {
                         this.url = downloadURL
@@ -148,6 +173,7 @@ export default defineComponent({
                 });
                 this.openUpdate = !this.openUpdate;
             }
+            this.$refs.fileupload.value = null;
         },
         onDelete() {
             deleteDoc(doc(db, colM, `${this.id}`));
@@ -213,7 +239,7 @@ export default defineComponent({
                         <tr>
                             <th
                                 class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                No</th>
+                                Nos</th>
                             <th
                                 class="py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                                 Icon</th>
@@ -265,7 +291,8 @@ export default defineComponent({
                                         stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg></a>
+                                    </svg>
+                                </a>
                             </td>
                         </tr>
                     </tbody>
@@ -281,7 +308,8 @@ export default defineComponent({
                         Icon
                     </label>
                     <div>
-                        <input class="block text-black" type="file" @change="onFileChange" accept=".jpg, .jpeg, .png"/>
+                        <input class="block text-black" ref="fileupload" type="file" @change="onFileChange"
+                            accept=".jpg, .jpeg, .png" />
                         <img v-if="url" :src="url" class="w-32" />
                     </div>
                 </div>
