@@ -1,4 +1,5 @@
 <script lang="ts">
+import exportFromJSON from "export-from-json";
 import { DocumentData, where, query, doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { getStorage, ref as refs, getDownloadURL, uploadString } from 'firebase/storage'
 import { url } from 'inspector';
@@ -31,9 +32,29 @@ export default defineComponent({
             } else {
                 this.winnerId = 0
             }
-        }
+        },
+        exportData() {
+            excelParser().exportDataFromJSON(this.winnerList, null, null);
+        },
     }
 })
+
+export const excelParser = () => {
+    function exportDataFromJSON(data: any, newFileName: any, fileExportType: any) {
+        if (!data) return;
+        try {
+            const fileName = newFileName || "exported-data";
+            const exportType = exportFromJSON.types[fileExportType || "xls"];
+            exportFromJSON({ data, fileName, exportType });
+        } catch (e) {
+            throw new Error("Parsing failed!");
+        }
+    }
+
+    return {
+        exportDataFromJSON
+    };
+};
 </script>
 
 <template>
@@ -70,6 +91,12 @@ export default defineComponent({
     </transition>
     <div class="flex flex-col">
         <div class="overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+            <div class="mb-4">
+                <div class="flex justify-start">
+                    <button class="px-4 py-2 rounded-md bg-sky-500 text-sky-100 hover:bg-sky-600"
+                        @click="exportData">Export</button>
+                </div>
+            </div>
             <div class="inline-block min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg">
                 <input type="text" class="mb-4 min-w-full bg-white text-black" placeholder="Search here..."
                     v-model="searchTxt">
