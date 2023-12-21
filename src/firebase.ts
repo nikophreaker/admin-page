@@ -50,6 +50,14 @@ export const prizeMRef = collection(db, colM);
 export const kuponMRef = collection(db, colM2);
 export const winnerMRef = collection(db, colM3);
 
+// Fortune wheel M882 firestore
+export const colM12 = "luckyspin-m2";
+export const colM22 = "kupon-m2";
+export const colM32 = "prizespinwheel-m2";
+export const prizeMRef2 = collection(db, colM12);
+export const kuponMRef2 = collection(db, colM22);
+export const winnerMRef2 = collection(db, colM32);
+
 // Scratch firestore
 export const colScratch = "scratch";
 export const colScratch2 = "kuponscratch";
