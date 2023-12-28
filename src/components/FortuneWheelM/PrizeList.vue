@@ -97,6 +97,7 @@ export default defineComponent({
                     }
                 });
             });
+            this.imgResult = "";
             this.$refs.fileupload.value = null;
         },
         onUpdate() {
@@ -149,6 +150,7 @@ export default defineComponent({
                             this.color = ""
                             this.prize = ""
                         });
+                        this.imgResult = "";
                         this.openUpdate = !this.openUpdate;
                     });
                 });
@@ -171,6 +173,7 @@ export default defineComponent({
                     this.color = ""
                     this.prize = ""
                 });
+                this.imgResult = "";
                 this.openUpdate = !this.openUpdate;
             }
             this.$refs.fileupload.value = null;
