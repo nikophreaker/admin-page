@@ -1,4 +1,5 @@
 <script lang="ts">
+import exportFromJSON from "export-from-json";
 import { DocumentData, where, query, getDocs, doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { defineProps, defineComponent, ref } from 'vue';
 import { useFirestore, useCollection, useDocument } from 'vuefire';
@@ -23,17 +24,17 @@ export default defineComponent({
             return this.isOpen;
         },
         kuponLists() {
-            return this.kuponList.filter((el, id) => { return this.kuponList.indexOf(el) === id})
+            return this.kuponList.filter((el, id) => { return this.kuponList.indexOf(el) === id })
         }
     },
     methods: {
         preventRedudant: function (val: DocumentData, idx: number, arr: DocumentData[]) {
-          for(var i = 0; i < idx; i++) {
-            if(arr[i].id === val.id) {
-              return false;
+            for (var i = 0; i < idx; i++) {
+                if (arr[i].id === val.id) {
+                    return false;
+                }
             }
-          }
-          return true;
+            return true;
         },
         async makeCode(length: number) {
             let result = '';
@@ -62,6 +63,36 @@ export default defineComponent({
                 return;
             }
         },
+        async makeCode2(length: number) {
+            for (let i = 1; i <= 10; i++) {
+                console.log(i);
+                let result = '';
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                const charactersLength = characters.length;
+                let counter = 0;
+                while (counter < length) {
+                    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+                    counter += 1;
+                }
+                const q = query(kuponMRef, where("kode", "==", result));
+                const querySnapshot = await getDocs(q);
+                if (querySnapshot.size == 0) {
+                    let last = this.kuponList.sort((a, b) => a.id - b.id)[this.kuponList.length - 1]
+                    let id = last != undefined ? parseInt(last.id) + 1 : 1;
+                    let data = {
+                        id: id,
+                        kode: result.toUpperCase(),
+                        fixed: false,
+                        idPrize: "",
+                        active: true,
+                    }
+                    setDoc(doc(db, colM2, `${id}`), data);
+                    //return result
+                } else {
+                    continue;
+                }
+            }
+        },
         onClickAdd() {
             this.openAdd = true;
             this.openUpdate = !this.openUpdate;
@@ -72,13 +103,13 @@ export default defineComponent({
             if (this.openUpdate === true) {
                 this.id = kupon.id
                 this.kode = kupon.kode
-                this.fixed= kupon.fixed
+                this.fixed = kupon.fixed
                 this.idPrize = kupon.idPrize
                 this.status = kupon.active
             } else {
                 this.id = ""
                 this.kode = ""
-                this.fixed= false
+                this.fixed = false
                 this.idPrize = ""
                 this.status = true
             }
@@ -98,7 +129,7 @@ export default defineComponent({
                     this.kode = ""
                     this.fixed = false
                     this.idPrize = "",
-                    this.status = true
+                        this.status = true
                     this.openUpdate = !this.openUpdate;
                     this.openAdd = false;
                 });
@@ -132,9 +163,29 @@ export default defineComponent({
             } else {
                 this.id = ""
             }
-        }
+        },
+        exportData() {
+            excelParser().exportDataFromJSON(this.kuponList, null, null);
+        },
     }
 })
+
+export const excelParser = () => {
+    function exportDataFromJSON(data: any, newFileName: any, fileExportType: any) {
+        if (!data) return;
+        try {
+            const fileName = newFileName || "exported-data";
+            const exportType = exportFromJSON.types["xls"];
+            exportFromJSON({ data, fileName, exportType });
+        } catch (e) {
+            throw new Error("Parsing failed!");
+        }
+    }
+
+    return {
+        exportDataFromJSON
+    };
+};
 </script>
 
 <template>
@@ -173,8 +224,16 @@ export default defineComponent({
         <div :class="{ 'overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8': true, 'hidden': openUpdate }">
             <div class="mb-4">
                 <div class="flex justify-start">
+                    <button class="px-4 py-2 rounded-md bg-sky-500 text-sky-100 hover:bg-sky-600"
+                        @click="exportData">Export</button>
+                </div>
+                <div class="flex justify-start">
                     <button class="px-4 py-2 rounded-md bg-sky-500 text-sky-100 hover:bg-sky-600" @click="onClickAdd">Create
                         Voucher</button>
+                </div>
+                <div class="flex justify-end my-2">
+                    <button class="px-4 py-2 rounded-md bg-sky-500 text-sky-100 hover:bg-sky-600" @click="makeCode2(5)">Add
+                        Random Code 10</button>
                 </div>
                 <div class="flex justify-end">
                     <button class="px-4 py-2 rounded-md bg-sky-500 text-sky-100 hover:bg-sky-600" @click="makeCode(5)">Add
@@ -182,7 +241,8 @@ export default defineComponent({
                 </div>
             </div>
             <div class="inline-block min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg">
-                <input type="text" class="mb-4 min-w-full bg-white text-black" placeholder="Search here..." v-model="searchTxt">
+                <input type="text" class="mb-4 min-w-full bg-white text-black" placeholder="Search here..."
+                    v-model="searchTxt">
                 <table class="min-w-full">
                     <thead>
                         <tr>
@@ -207,7 +267,8 @@ export default defineComponent({
                         </tr>
                     </thead>
                     <tbody class="bg-white">
-                        <tr v-for="kupon in kuponList.filter(preventRedudant).sort((a, b) => a.id - b.id).filter((a) => a.kode.includes(searchTxt.toUpperCase()))" :key="kupon.id">
+                        <tr v-for="kupon in kuponList.filter(preventRedudant).sort((a, b) => a.id - b.id).filter((a) => a.kode.includes(searchTxt.toUpperCase()))"
+                            :key="kupon.id">
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="flex items-center text-gray-900">
                                     {{ kupon.id }}
@@ -315,5 +376,5 @@ export default defineComponent({
                 </div>
             </form>
         </div>
-</div>
+    </div>
 </template>

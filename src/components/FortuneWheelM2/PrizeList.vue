@@ -18,7 +18,8 @@ export default defineComponent({
             openAdd: false,
             openUpdate: false,
             isOpen: false,
-            searchTxt: ""
+            searchTxt: "",
+            fileupload: null
         };
     },
     computed: {
@@ -98,7 +99,7 @@ export default defineComponent({
                 });
             });
             this.imgResult = "";
-            this.$refs.fileupload.value = null;
+            this.fileupload = null;
         },
         onUpdate() {
             var time = Date.now().toString();
@@ -176,7 +177,7 @@ export default defineComponent({
                 this.imgResult = "";
                 this.openUpdate = !this.openUpdate;
             }
-            this.$refs.fileupload.value = null;
+            this.fileupload = null;
         },
         onDelete() {
             deleteDoc(doc(db, colM12, `${this.id}`));
@@ -311,7 +312,7 @@ export default defineComponent({
                         Icon
                     </label>
                     <div>
-                        <input class="block text-black" ref="fileupload" type="file" @change="onFileChange"
+                        <input class="block text-black" type="file" @v-model="fileupload" @change="onFileChange"
                             accept=".jpg, .jpeg, .png" />
                         <img v-if="url" :src="url" class="w-32" />
                     </div>

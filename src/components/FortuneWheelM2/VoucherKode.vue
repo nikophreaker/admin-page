@@ -1,4 +1,5 @@
 <script lang="ts">
+import exportFromJSON from "export-from-json";
 import { DocumentData, where, query, getDocs, doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { defineProps, defineComponent, ref } from 'vue';
 import { useFirestore, useCollection, useDocument } from 'vuefire';
@@ -162,9 +163,29 @@ export default defineComponent({
             } else {
                 this.id = ""
             }
-        }
+        },
+        exportData() {
+            excelParser().exportDataFromJSON(this.kuponList, null, null);
+        },
     }
 })
+
+export const excelParser = () => {
+    function exportDataFromJSON(data: any, newFileName: any, fileExportType: any) {
+        if (!data) return;
+        try {
+            const fileName = newFileName || "exported-data";
+            const exportType = exportFromJSON.types["xls"];
+            exportFromJSON({ data, fileName, exportType });
+        } catch (e) {
+            throw new Error("Parsing failed!");
+        }
+    }
+
+    return {
+        exportDataFromJSON
+    };
+};
 </script>
 
 <template>
@@ -202,6 +223,10 @@ export default defineComponent({
     <div class="flex flex-col">
         <div :class="{ 'overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8': true, 'hidden': openUpdate }">
             <div class="mb-4">
+                <div class="flex justify-start">
+                    <button class="px-4 py-2 rounded-md bg-sky-500 text-sky-100 hover:bg-sky-600"
+                        @click="exportData">Export</button>
+                </div>
                 <div class="flex justify-start">
                     <button class="px-4 py-2 rounded-md bg-sky-500 text-sky-100 hover:bg-sky-600" @click="onClickAdd">Create
                         Voucher</button>
