@@ -103,14 +103,12 @@ export default defineComponent({
                 <li class="relative">
                     <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
                         href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(4)"
-                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 4, 'text-white bg-pink-600 ': openNav === 4 }">Fortune
-                        Wheel M88</a>
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 4, 'text-white bg-pink-600 ': openNav === 4 }">(https://m88jackpot.vip/)</a>
                 </li>
                 <li class="relative">
                     <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
                         href="#!" data-mdb-ripple="true" data-mdb-ripple-color="dark" @click="toggleNavs(5)"
-                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 5, 'text-white bg-pink-600': openNav === 5 }">Fortune
-                        Wheel M88 2</a>
+                        :class="{ 'text-gray-700 bg-white hover:text-gray-900 hover:bg-gray-100': openNav !== 5, 'text-white bg-pink-600': openNav === 5 }">(https://linkm88e.com/)</a>
                 </li>
                 <li class="relative">
                     <a class="flex items-center text-sm py-4 px-6 h-12 overflow-hidden text-ellipsis whitespace-nowrap rounded transition duration-300 ease-in-out"
